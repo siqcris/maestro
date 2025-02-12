@@ -1,0 +1,21 @@
+appId: br.com.edenred.stg
+name: Validar realizar preenchimento do formulario de cadastro com CPF inválido
+tags: 
+  - onboarding
+  - cadastro
+  - acesso_deslogado
+env:
+    CPF: 44530477894
+---
+- runFlow: ./subflows/ios_loader_pages.yaml
+#Realizar cadastro com CPF invalido
+- launchApp:
+    clearState: true
+- waitForAnimationToEnd:
+    timeout: 5000
+- tapOn: "Crie sua conta Ticket"
+- assertVisible: "Que bom ver você\npor aqui!"
+- tapOn: "CPF"
+- inputText: ${CPF}
+- tapOn: "Para fazer parte do mundo Ticket é super fácil, digite seu CPF abaixo:"
+- assertVisible: "Digite um CPF válido"

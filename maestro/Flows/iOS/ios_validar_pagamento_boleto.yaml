@@ -1,0 +1,94 @@
+appId: br.com.ticket.stg
+name: Validar pagamento de boleto
+tags: 
+  - payments
+  - pgto_boleto
+env:
+    BOLETO: "836200000005499700470002000000004200527806220051" 
+    USERNAME: automacao+payments@gmail.com
+    PASSWORD: Teste@123
+
+onFlowStart:
+  - runFlow: ./subflows/ios_login_default.yaml
+---
+- runFlow: ./subflows/ios_loader_pages.yaml
+
+# Validacao Pagamento para o Produto Ticket Super Flex Multi Bin (TMB-Preto)
+# Clicar no icone 'Pagar', selecionar a opção(de pagamento) Boleto e selecionar o produto que será usado para efetuar o pagamento
+- waitForAnimationToEnd:
+    timeout: 10000
+- waitForAnimationToEnd:
+    timeout: 5000
+    
+- waitForAnimationToEnd:
+    timeout: 8000 
+- assertVisible: "Pagar"
+- tapOn: 
+    point: ${output.home.btnTabbarPay}
+
+- assertVisible: "Qual forma de pagamento deseja usar?"
+- tapOn: ${output.payments.btnChoosePaymentBill}
+
+- assertVisible: "Com qual cartão deseja pagar?"
+- tapOn: 
+    point: ${output.payments.optBillThirdCard} #alteração no cartão que será usado no pagamento de boleto
+
+#Chamando inicio do fluxo de pagamento até validacao randomica  
+- runFlow: 
+    file: ./subflows/ios_pagamento_boleto_inicio.yaml  
+ #Chamando Validacao randomica
+- runFlow: 
+    file: ./subflows/ios_valid_random_tmb.yaml
+#Chamando continuacao do fluxo de pagamento após validacao randomica
+- runFlow: 
+    file: ./subflows/ios_pagamento_boleto_fim.yaml  
+
+#Validar exibição do pagamento no extrato
+- tapOn:
+    point: "70%,37%"
+- waitForAnimationToEnd:
+    timeout: 10000       
+- scroll
+- waitForAnimationToEnd:
+    timeout: 2000  
+- takeScreenshot: iOS - Pgto Boleto - Extrato TMB
+- tapOn: 
+    point: ${output.header.btnBack}
+- assertVisible: ${output.home.btnAddCard}
+
+## Validacao Pagamento para o Produto Ticket Super Flex Multi Trilha(TSF-Branco)
+# Clicar no icone 'Pagar', selecionar a opção(de pagamento) Boleto e selecionar o produto que será usado para efetuar o pagamento
+- waitForAnimationToEnd:
+    timeout: 10000
+- assertVisible: "Pagar"
+- tapOn: 
+    point: ${output.home.btnTabbarPay}
+
+- assertVisible: "Qual forma de pagamento deseja usar?"
+- tapOn: ${output.payments.btnChoosePaymentBill}
+
+- assertVisible: "Com qual cartão deseja pagar?"
+- tapOn: 
+    point: ${output.payments. optBillSecondCard} #alteração no cartão que será usado no pagamento de boleto
+#Chamando inicio do fluxo de pagamento até validacao randomica  
+- runFlow: 
+    file: ./subflows/ios_pagamento_boleto_inicio.yaml  
+ #Chamando Validacao randomica
+- runFlow: 
+    file: ./subflows/ios_valid_random_tsf.yaml
+#Chamando continuacao do fluxo de pagamento após validacao randomica
+- runFlow: 
+    file: ./subflows/ios_pagamento_boleto_fim.yaml  
+
+#Validar exibição do pagamento no extrato do produto TSF
+- tapOn:
+    point: "24%,37%"
+- waitForAnimationToEnd:
+    timeout: 10000       
+- scroll
+- waitForAnimationToEnd:
+    timeout: 2000  
+- takeScreenshot: iOS - Pgto Boleto - Extrato TSF
+- tapOn: 
+    point: ${output.header.btnBack}
+- assertVisible: ${output.home.btnAddCard}   

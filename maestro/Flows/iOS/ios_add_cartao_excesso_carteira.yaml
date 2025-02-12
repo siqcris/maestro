@@ -1,0 +1,53 @@
+appId: br.com.edenred.stg
+name: Validar adicionar cartão quando a carteira esta cheia
+tags: 
+  - core
+  - cartao
+  - add_cartao
+
+env:
+    CARTAO_VALIDO1: "6033"
+    CARTAO_VALIDO2: "4000"
+    CARTAO_VALIDO3: "0056"
+    CARTAO_VALIDO4: "8692"
+    SENHA_VALIDA:  "0423" 
+    USERNAME: automacao@gmail.com
+    PASSWORD: Teste@123
+onFlowStart:
+  - runFlow: ./subflows/ios_login_default.yaml
+---
+- runFlow: ./subflows/ios_loader_pages.yaml
+#Validar cadastrar cartao (Restaurante)
+
+- scrollUntilVisible:
+    element: ${output.home.btnAddCard}
+    direction: "DOWN"
+- tapOn: ${output.home.btnAddCard}  
+
+- tapOn: "Número do cartão"
+- inputText: ${CARTAO_VALIDO1}
+- inputText: ${CARTAO_VALIDO2}
+- inputText: ${CARTAO_VALIDO3}
+- inputText: ${CARTAO_VALIDO4}
+- scrollUntilVisible:
+    element: "Avançar"
+    direction: "DOWN"
+- tapOn: "Avançar"
+- assertVisible: "Boa notícia, encontramos as informações do seu cartão no nosso sistema. Agora, confirme a senha que recebeu junto com o cartão"
+- tapOn: "Senha"
+- inputText: ${SENHA_VALIDA}
+- scrollUntilVisible:
+    element: "Confirmar senha"
+    direction: "DOWN"
+- tapOn:
+    point: "50%,61%"
+- inputText: ${CARTAO_EXCESSO_SENHA}
+- tapOn: "Boa notícia, encontramos as informações do seu cartão no nosso sistema. Agora, confirme a senha que recebeu junto com o cartão"
+- tapOn:
+    point: "50%,93%"
+
+- assertVisible: "Erro ao cadastrar cartão"
+- assertVisible: "Ocorreu um erro ao cadastrar o cartão. Verifique os dados e tente novamente."
+
+- tapOn: "Tente novamente"
+- assertVisible: "Boa notícia, encontramos as informações do seu cartão no nosso sistema. Agora, confirme a senha que recebeu junto com o cartão"

@@ -1,0 +1,73 @@
+appId: br.com.mobile
+name: Validar adicionar cartão e excluir - Home sem cartão
+tags: 
+  - core
+  - cartao
+  - add_cartao
+
+env:
+    USERNAME: automacao@gmail.com
+    PASSWORD: Teste@123
+    CARD_ADD: "6033424939977039"
+    PASSWORD_CARD: "0423"
+
+onFlowStart:
+  - runFlow: ./subflows/android_login_default.yaml
+---
+- runFlow: subflows/android_loader_pages.yaml
+#Validar cadastrar cartao (Flex Branco)
+
+- assertVisible: ${output.home.btnAddCard}
+- tapOn: ${output.home.btnAddCard}
+- assertVisible: "Número do cartão"
+- tapOn: "Número do cartão"
+- inputText: ${CARD_ADD}
+- hideKeyboard
+- tapOn: "Apelido do cartão"
+- inputRandomText
+- hideKeyboard
+- scrollUntilVisible:
+    element: "Avançar"
+    direction: DOWN 
+- tapOn: "Avançar"
+- assertVisible: "Boa notícia, encontramos as informações do seu cartão no nosso sistema. Agora, confirme a senha que recebeu junto com o cartão"
+- tapOn: "Senha"
+- inputText: ${PASSWORD_CARD}
+- hideKeyboard
+- tapOn: "Confirmar senha"
+- inputText: ${PASSWORD_CARD}
+- hideKeyboard
+- scrollUntilVisible:
+    element: "Confirmar senha"
+    direction: DOWN 
+- tapOn: "Confirmar senha"
+- assertVisible: "Cartão cadastrado com\ \nsucesso!"
+- tapOn: "Ir para home"
+- assertVisible: ${output.home.btnAddCard}
+#Aceitar campanha
+- waitForAnimationToEnd:
+    timeout: 50000
+
+- runFlow:
+    when:
+      visible: "OK, entendi"
+    commands:
+        - tapOn: "OK, entendi"  
+
+
+#Remover cartão Add
+- assertVisible: ${output.home.btnAddCard}
+- tapOn:
+    point: "50%,22%"
+- assertVisible: "Extrato"
+- tapOn: ${output.cardServices.deleteCard}
+- assertVisible: "O que acontece se eu excluir meu cartão?"
+- tapOn: "Excluir cartão"
+- tapOn: "Você também perderá os dados do seu cartão salvo no Portal Ticket e plataformas de delivery. Seu cartão físico continua funcionando normalmente"
+- tapOn: "Excluir cartão"
+- assertVisible: "Cartão excluído!"
+- takeScreenshot: Tela de sucesso na exclusão de cartão
+- tapOn: "Entendi"
+- waitForAnimationToEnd:
+    timeout: 2000
+- takeScreenshot: Home sem cartao - cartao excluido (Android)

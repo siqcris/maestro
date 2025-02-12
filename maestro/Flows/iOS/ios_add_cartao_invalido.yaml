@@ -1,0 +1,151 @@
+appId: br.com.edenred.stg
+name: Validar adicionar cartão com dados inválidos
+tags: 
+  - core
+  - cartao
+  - add_cartao
+env:
+#Cartao com menos caracteres
+    CARTAO_MENOS: "1123"
+#Cartao valido - será usado para tentar adicionar informando a senha errada  
+    CARTAO_VALIDO1: "3085"
+    CARTAO_VALIDO2: "1300"
+    CARTAO_VALIDO3: "0328"
+    CARTAO_VALIDO4: "3030"
+#Cartao invalido - inexistente
+    CARTAO_INVALIDO1: "6033"
+    CARTAO_INVALIDO2: "4008"
+    CARTAO_INVALIDO3: "0056"
+    CARTAO_INVALIDO4: "8692"
+#Cartao valido ja existente na carteira
+    CARTAO_EXISTENTE1: "6026" 
+    CARTAO_EXISTENTE2: "5145" 
+    CARTAO_EXISTENTE3: "6178" 
+    CARTAO_EXISTENTE4: "1052" 
+    CARTAO_EXISTENTE_PASSWORD : "2111"
+#Cartao valido com senha invalida
+    SENHA_INVALIDA:  "9999"      
+
+    USERNAME: ticket.automacao+3@gmail.com
+    PASSWORD: Teste@123
+
+onFlowStart:
+  - runFlow: ./subflows/ios_login_default.yaml
+---
+- runFlow: subflows/ios_loader_pages.yaml
+
+#Clicar em adicionar cartão
+- assertVisible: ${output.home.btnAddCard}
+- tapOn: ${output.home.btnAddCard}
+- assertVisible: "Olá, agora vamos adicionar seu benefício em nosso sistema."
+#Adicionar cartão existente na carteira
+- tapOn: 
+    point: ${output.addCard.fldCardNumber}
+- inputText: ${CARTAO_EXISTENTE1}
+- inputText: ${CARTAO_EXISTENTE2}
+- inputText: ${CARTAO_EXISTENTE3}
+- inputText: ${CARTAO_EXISTENTE4}
+- tapOn:
+    point: "80%,43%"
+
+- tapOn: ${output.addCard.fldCardRename}
+- inputRandomText 
+- scrollUntilVisible:
+    element: ${output.addCard.btnContinue}
+    direction: DOWN 
+- tapOn: ${output.addCard.btnContinue}
+- assertVisible: "Boa notícia, encontramos as informações do seu cartão no nosso sistema. Agora, confirme a senha que recebeu junto com o cartão"
+- tapOn: 
+    point: ${output.addCard.fldPassword}
+- inputText: ${CARTAO_EXISTENTE_PASSWORD}
+- tapOn: 
+    point: ${output.addCard.fldConfirmPassword}
+- inputText: ${CARTAO_EXISTENTE_PASSWORD}
+- tapOn: "Boa notícia, encontramos as informações do seu cartão no nosso sistema. Agora, confirme a senha que recebeu junto com o cartão"
+- tapOn:
+    point: ${output.addCard.btnConfirmPasswordpoint}
+- assertVisible: "Cartão já cadastrado"
+- tapOn: "Acesse o saldo disponível, extrato detalhado e muito mais deste cartão."
+
+
+
+### Redirecionamento pra home - valid de senha incorreta
+- tapOn: "Ir para home"
+
+
+#Clicar em adicionar cartão
+- tapOn: ${output.home.btnAddCard}
+- assertVisible: "Olá, agora vamos adicionar seu benefício em nosso sistema."
+# #Adicionar cartão senha inválida
+- tapOn: 
+    point: ${output.addCard.fldCardNumber}
+- inputText: ${CARTAO_VALIDO1}
+- inputText: ${CARTAO_VALIDO2}
+- inputText: ${CARTAO_VALIDO3}
+- inputText: ${CARTAO_VALIDO4}
+
+- scrollUntilVisible:  
+    element: ${output.addCard.btnContinue}
+    direction: DOWN  
+- tapOn: ${output.addCard.btnContinue}
+
+- assertVisible: "Boa notícia, encontramos as informações do seu cartão no nosso sistema. Agora, confirme a senha que recebeu junto com o cartão"
+- tapOn: 
+    point: ${output.addCard.fldPassword}
+- inputText: ${SENHA_INVALIDA}
+- hideKeyboard
+- tapOn: 
+    point: ${output.addCard.fldConfirmPassword}
+- inputText: ${SENHA_INVALIDA}
+- tapOn: "Boa notícia, encontramos as informações do seu cartão no nosso sistema. Agora, confirme a senha que recebeu junto com o cartão"
+- tapOn:
+    point: ${output.addCard.btnConfirmPasswordpoint}
+
+- waitForAnimationToEnd:
+    timeout: 50000
+
+#Validando textos da bottom sheet de troca de senha
+- assertVisible: "Senha incorreta"
+- tapOn: "Após 5 tentativas incorretas, sua senha será bloqueada.\ 
+
+
+    Confira a carta que veio junto com o seu cartão porque a senha está lá.
+
+
+    Caso tenha esquecido a senha, por favor, entre em contato com a Central de Atendimento."
+
+#Clique no botão entendi  (Usuario volta para a tela de senha da adicao de cartao)
+- tapOn: "Entendi"
+
+# Voltar para a tela de add cartão    
+ 
+ #Voltando para a home para iniciar um novo fluxo de add card com campos limpos
+- tapOn:
+    point: ${output.header.btnBack}
+- tapOn:
+    point: ${output.header.btnBack}  
+
+#Novo fluxo de add card com campos limpos
+- tapOn: ${output.home.btnAddCard}
+
+#Adicionar cartão com menos caracteres
+- tapOn: 
+    point: ${output.addCard.fldCardNumber}
+- inputText: ${CARTAO_MENOS}
+- assertVisible: "Número do cartão inválido"
+- hideKeyboard
+
+#Adicionar cartão inválido 
+- tapOn: 
+    point: ${output.addCard.fldCardNumber}
+- "eraseText"
+- inputText: ${CARTAO_INVALIDO1}
+- inputText: ${CARTAO_INVALIDO2}
+- inputText: ${CARTAO_INVALIDO3}
+- inputText: ${CARTAO_INVALIDO4}
+- scrollUntilVisible:
+    element: ${output.addCard.btnContinue}
+    direction: DOWN 
+- tapOn: ${output.addCard.btnContinue}
+- assertVisible: "Erro ao cadastrar cartão"
+- tapOn: "Ocorreu um erro ao cadastrar o cartão. Verifique os dados e tente novamente."

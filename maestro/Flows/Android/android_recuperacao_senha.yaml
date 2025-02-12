@@ -1,0 +1,27 @@
+# flow_contacts_ios.yaml com.apple.MobileAddressBook
+appId: br.com.mobile
+name: Validar MFA - esqueci minha senha com sucesso
+tags: 
+  - onboarding
+  - recuperacao_senha
+  - acesso_deslogado
+env:
+    EMAIL: automacao@gmail.com
+---
+#Realizar Login valido
+- launchApp:
+    clearState: true
+- waitForAnimationToEnd:
+    timeout: 5000
+- tapOn: "Entrar"
+- extendedWaitUntil:
+    visible: "Acesse sua conta"
+    timeout: 10000 
+- tapOn: "Esqueci Minha Senha"
+- tapOn: "Para recuperar sua senha, digite o seu e-mail cadastrado"
+- tapOn: "E-mail"
+- inputText: ${EMAIL}
+- tapOn: "Confirmar"
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertVisible: "Para continuar você precisa do código de verificação. Selecione onde prefere receber o código."

@@ -1,0 +1,34 @@
+appId: br.com.edenred.ticket.stg
+---
+- waitForAnimationToEnd:
+    timeout: 8000
+
+#Dialog solicitando permissão para colar o boleto
+- tapOn:
+    point: "75%,45%"
+
+- pressKey: Enter
+- tapOn: "Digite o código manualmente"
+- runFlow:
+    when:
+      visible: "Permitir Colar"
+    commands:
+        - tapOn: "Permitir Colar"
+
+- assertVisible: "Pagamento de boleto"
+- assertVisible: "Digite ou cole o código do boleto que deseja pagar"
+- tapOn: "Código de barras"
+- inputText: ${BOLETO}
+
+- tapOn: Continuar
+- waitForAnimationToEnd:
+    timeout: 40000
+- assertVisible: "Confirme as informações"
+#Dentro do fluxo: Clique no icone de visibilidade
+- scrollUntilVisible:
+    element: "Continuar"
+    direction: DOWN
+- tapOn: "Continuar"    
+#Carregamento demorado nesta etapa do fluxo
+- waitForAnimationToEnd:
+    timeout: 20000

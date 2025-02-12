@@ -1,0 +1,55 @@
+appId: br.com.mobile
+name: Validar adicionar cartão e excluir - Home com cartão
+tags: 
+  - core
+  - cartao
+  - add_cartao
+  
+env:
+    USERNAME: automacao+3@gmail.com
+    PASSWORD: Teste@123
+
+onFlowStart:
+  - runFlow: ./subflows/android_login_default.yaml
+---
+- runFlow: subflows/android_loader_pages.yaml
+
+#Validar cadastrar cartao (Super Flex Preto)
+- tapOn: ${output.home.btnAddCard}
+
+- assertVisible: "Número do cartão"
+- tapOn: "Número do cartão"
+- inputText: "6033401114232679"
+- hideKeyboard
+- scrollUntilVisible:
+    element: "Avançar"
+    direction: DOWN 
+- tapOn: "Avançar"
+- assertVisible: "Boa notícia, encontramos as informações do seu cartão no nosso sistema. Agora, confirme a senha que recebeu junto com o cartão"
+- tapOn: "Senha"
+- inputText: "2111"
+- hideKeyboard
+- tapOn: "Confirmar senha"
+- inputText: "2111"
+- hideKeyboard
+- assertVisible: "Confirmar senha"
+- tapOn: "Confirmar senha"
+- assertVisible: "Cartão cadastrado com\ \nsucesso!"
+- tapOn: "Ir para home"
+- assertVisible: ${output.home.btnAddCard}
+#Remover cartão Add
+##Clique no cartao recem-adicionado
+- tapOn:
+    point: "24%,30%"
+- assertVisible: "Saldo por benefício"
+- tapOn: ${output.cardServices.deleteCard}
+- assertVisible: "O que acontece se eu excluir meu cartão?"
+- tapOn: "Excluir cartão"
+- tapOn: "Você também perderá os dados do seu cartão salvo no Portal Ticket e plataformas de delivery. Seu cartão físico continua funcionando normalmente"
+- tapOn: "Excluir cartão"
+- assertVisible: "Cartão excluído!"
+- takeScreenshot: Tela de sucesso na exclusão de cartão
+- tapOn: "Entendi"
+- waitForAnimationToEnd:
+    timeout: 2000
+- takeScreenshot: Home com o cartao excluido (Android)

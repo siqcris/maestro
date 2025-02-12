@@ -1,0 +1,27 @@
+# loadElements.yaml
+appId: br.com.edenred.ticket.stg
+---
+- runScript: ../pages/page_home.js
+- runScript: ../pages/page_login.js
+- runScript: ../pages/page_profile.js
+- runScript: ../pages/page_change_password.js
+- runScript: ../pages/page_card_services.js
+- runScript: ../pages/page_advantages.js
+- runScript: ../pages/page_rename.js
+- runScript: ../pages/page_registration_data.js
+- runScript: ../pages/page_header.js
+- runScript: ../pages/page_add_card.js
+- runScript: ../pages/page_payments.js
+- runScript: ../pages/page_forgot_password_card.js
+- runScript: ../pages/page_change_card_password.js
+- runScript: ../pages/page_eva.js
+- runScript: ../pages/page_daily_spending_suggestion.js
+- runScript: ../pages/page_registration.js
+- runScript: ../pages/page_statement.js
+- runScript: ../pages/page_eva.js
+- runScript: ../pages/page_daily_spending_suggestion.js
+- runScript: ../pages/page_registration.js
+- runScript: ../pages/page_change_card_password.js
+- runScript: ../pages/page_forgot_password.js
+- runScript: ../pages/page_indique_estabelecimento.js
+- runScript: ../pages/page_rating.js

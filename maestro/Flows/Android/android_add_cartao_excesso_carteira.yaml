@@ -1,0 +1,50 @@
+appId: br.com.mobile
+name: Validar adicionar cartão quando a carteira esta cheia
+tags: 
+  - core
+  - cartao
+  - add_cartao
+
+env:
+    CARTAO_EXCESSO_NUMERO: "6033401112807803"
+    CARTAO_EXCESSO_SENHA: "2111"
+    USERNAME: automacao@gmail.com
+    PASSWORD: Teste@123
+
+onFlowStart:
+  - runFlow: ./subflows/android_login_default.yaml
+---
+- runFlow: subflows/android_loader_pages.yaml
+
+- scrollUntilVisible:
+    element: ${output.home.btnAddCard}
+    direction: DOWN 
+- tapOn: ${output.home.btnAddCard}
+
+- assertVisible: "Olá, agora vamos adicionar seu benefício em nosso sistema."
+
+- tapOn: "Número do cartão"
+- inputText: ${CARTAO_EXCESSO_NUMERO}
+- hideKeyboard
+- scrollUntilVisible:
+    element: "Avançar"
+    direction: DOWN 
+- tapOn: "Avançar"
+- assertVisible: "Boa notícia, encontramos as informações do seu cartão no nosso sistema. Agora, confirme a senha que recebeu junto com o cartão"
+- tapOn: "Senha"
+- inputText: ${CARTAO_EXCESSO_SENHA}
+- hideKeyboard
+- tapOn: "Confirmar senha"
+- inputText: ${CARTAO_EXCESSO_SENHA}
+- hideKeyboard
+- scrollUntilVisible:
+    element: "Confirmar senha"
+    direction: DOWN 
+- tapOn: "Confirmar senha"
+
+- assertVisible: "Erro ao cadastrar cartão"
+- assertVisible: "Ocorreu um erro ao cadastrar o cartão. Verifique os dados e tente novamente."
+- tapOn: "Tente novamente"
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertVisible: "Boa notícia, encontramos as informações do seu cartão no nosso sistema. Agora, confirme a senha que recebeu junto com o cartão"

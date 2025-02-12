@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuites>
+  <testsuite name="Test Suite" device="iPhone SE (3rd generation) - iOS 17.2 - 52B4EFFB-E7FC-4B05-AA9E-C6A4F3109FED" tests="1" failures="0" time="355">
+    <testcase id="Validar alterar dados cadastrais com dados inválidos (Nome/Data de Nacimento)" name="Validar alterar dados cadastrais com dados inválidos (Nome/Data de Nacimento)" classname="Validar alterar dados cadastrais com dados inválidos (Nome/Data de Nacimento)" time="355" status="SUCCESS"/>
+  </testsuite>
+</testsuites>

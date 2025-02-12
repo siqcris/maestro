@@ -1,0 +1,17 @@
+output.forgot_password = {
+    fldNameComplet: 'Nome completo',
+    fldCPF: 'CPF',
+    fldDatebirth: 'Data de nascimento',
+    btnContinuar:  'Continuar',
+    titleForgotPassword: 'Esqueci minha senha',
+    subTitleRecuperarSenha: 'Recuperar senha',
+    iconVoltar: '6%,7%',
+    fldConfirmNewPassword:  'Confirmar nova senha',
+    fldConfirCVV: 'Confirmar o CVV do cartão',
+    inputCvv: '789',
+    btnTrocarPasswordCard: 'Trocar senha do cartão',
+    initialCpf: "370",
+    finalCpf: "66",
+    txtPassword: "2111",
+    txtDatebirthInitial: "070687",
+}

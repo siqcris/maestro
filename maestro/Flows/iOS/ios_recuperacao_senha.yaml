@@ -1,0 +1,33 @@
+appId: br.com.edenred.stg
+name: Validar esqueci minha senha com sucesso
+tags: 
+  - onboarding
+  - recuperacao_senha
+  - acesso_deslogado
+env:
+    EMAIL: automacao@gmail.com
+---
+- runFlow: ./subflows/ios_loader_pages.yaml
+#Realizar Login valido
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: "Entrar"
+    timeout: 60000 
+- tapOn: "Entrar"
+- runFlow:
+    when:
+      visible: "Continuar"
+    commands:
+        - tapOn: "Continuar"
+- extendedWaitUntil:
+    visible: "Acesse sua conta"
+    timeout: 10000 
+- tapOn: "Esqueci Minha Senha"
+- assertVisible: "E-mail"
+- tapOn: "E-mail"
+- inputText: ${EMAIL}
+- tapOn: "Confirmar"
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertVisible: "Esqueci a senha - Portal do usuário"

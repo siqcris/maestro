@@ -1,0 +1,78 @@
+appId: br.com.mobile
+name: Validar direcionamento do hiperlink 'Problemas com e-mail'
+tags: 
+  - onboarding
+  - eva
+---
+- runFlow: ./subflows/android_loader_pages.yaml
+#Realizar comportamento ao clicar em entrar
+- launchApp:
+    clearState: true
+- waitForAnimationToEnd:
+    timeout: 50000
+
+
+- runFlow:
+    when:
+      visible: ${output.login.modalConfirmBR}
+    commands:
+        - tapOn: ${output.login.modalConfirmBR}  
+
+- runFlow:
+    when:
+      visible: ${output.login.modalConfirmUS}
+    commands:
+        - tapOn: ${output.login.modalConfirmUS}   
+
+#Caso esteja desatualizado, clicar em não atualizar o APP
+- runFlow:
+    when:
+      visible: ${output.login.softUpdateBanner}
+    commands:
+        - tapOn: ${output.login.optSoftUpdate}  
+
+- extendedWaitUntil:
+    visible: ${output.login.btnFirstScreenLogin}
+    timeout: 50000        
+
+- tapOn: ${output.login.btnFirstScreenLogin}
+
+- runFlow:
+    when:
+      visible: ${output.login.optContinuar}
+    commands:
+        - tapOn: ${output.login.optContinuar}
+- runFlow:
+    when:
+      visible: ${output.login.optContinue}
+    commands:
+        - tapOn: ${output.login.optContinue}
+
+#Início do cenário Eva em Login
+- tapOn: ${output.eva.hplkChangeAccessPass}
+- assertVisible: "Você está sendo redirecionado para EVA, a nossa assistente virtual,\
+    \ que vai te ajudar a acessar sua conta."
+- tapOn: ${output.eva.btnOk}
+- assertVisible: ${output.eva.btnStartChat}
+- assertVisible: "Vamos resolver seu problema de e-mail juntos? É só clicar no \"enviar\" para começarmos!"
+
+#Voltar
+- back
+
+#Clicar em Login novamente
+- tapOn: ${output.login.btnFirstScreenLogin}
+- runFlow:
+    when:
+      visible: ${output.login.optContinuar}
+    commands:
+        - tapOn: ${output.login.optContinuar}
+#Clicar em Esqueci minha senha
+- tapOn: Esqueci Minha Senha
+
+#Início do cenário Eva em Esqueci minha senha
+- tapOn: ${output.eva.hplkChangeAccessPass}
+- assertVisible: "Você está sendo redirecionado para EVA, a nossa assistente virtual,\
+    \ que vai te ajudar a acessar sua conta."
+- tapOn: ${output.eva.btnOk}
+- assertVisible: ${output.eva.btnStartChat}
+- assertVisible: "Vamos resolver seu problema de e-mail juntos? É só clicar no \"enviar\" para começarmos!"

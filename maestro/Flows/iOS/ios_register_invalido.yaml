@@ -1,0 +1,64 @@
+appId: br.com.edenred.stg
+name: Validar realizar preenchimento do formulario de cadastro com dados inválidos
+tags: 
+  - onboarding
+  - cadastro
+  - acesso_deslogado
+env:
+    EMAIL: automacao@gmail.com
+    CONFIRM_EMAIL: automacao@gmail.com
+    CPF: 12065967404
+    NAME: A
+    TEL: 551199206
+    DATE: 121210004
+---
+- runFlow: ./subflows/ios_loader_pages.yaml
+#Realizar cadastro
+- launchApp:
+    clearState: true
+- waitForAnimationToEnd:
+    timeout: 5000
+- tapOn: "Crie sua conta Ticket"
+- assertVisible: "Que bom ver você\npor aqui!"
+- tapOn: "CPF"
+- inputText: ${CPF}
+- tapOn: "Para fazer parte do mundo Ticket é super fácil, digite seu CPF abaixo:"
+- tapOn:
+    point: "7%,75%"
+- tapOn:
+    point: "7%,80%"
+- tapOn:
+    point: "7%,86%"
+- tapOn:
+    point: "7%,91%"
+- scrollUntilVisible:
+    element: "Avançar"
+    direction: DOWN
+- tapOn: "Avançar"
+- assertVisible: "Informe seus dados pessoais"
+- tapOn: "Nome completo"
+- inputText: ${NAME}
+- pressKey: Enter
+- tapOn: "Todos os campos são obrigatórios"
+- tapOn: "Celular"
+- inputText: ${TEL}
+- scrollUntilVisible:
+    element: "Data de nascimento"
+    direction: DOWN 
+- tapOn: "Data de nascimento"
+- inputText: ${DATE}
+- scrollUntilVisible:
+    element: "E-mail"
+    direction: DOWN 
+- tapOn: "E-mail"
+- inputText: ${EMAIL}
+- pressKey: Enter
+- tapOn: "E-mail"
+- tapOn: "Confirmar e-mail"
+- inputText: ${EMAIL}
+- pressKey: Enter
+- tapOn: "Avançar"
+- assertVisible: "Nome inválido"
+- assertVisible: "Celular inválido"
+- assertVisible: "Digite uma data válida"
+- assertVisible: "E-mail inválido"

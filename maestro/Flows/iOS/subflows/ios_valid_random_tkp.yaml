@@ -1,0 +1,106 @@
+appId: br.com.mobile.ticket.staging
+
+env:
+    CARD_ELO_PASSWORD: "8654"
+    CARD_ELO_CVV: "741"
+    CARD_ELO_CPF: "9429"
+    CARD_ELO_DADOS_DIA: "01"
+    CARD_ELO_DADOS_MES: "01"
+    CARD_ELO_DADOS_ANO: "1987"
+---    
+
+#Valid randomica para o produto TMB
+- runFlow:
+    when:
+      visible: "Confirme o mês do seu nascimento"
+    commands:
+      - tapOn:
+          point: "50%,60%"
+      - waitForAnimationToEnd:
+          timeout: 4000
+      - inputText: ${CARD_ELO_DADOS_MES}
+      - tapOn: "Confirmar"
+      - waitForAnimationToEnd:
+          timeout: 37000 
+
+- runFlow:
+    when:
+      visible: "Confirme o dia do seu nascimento"
+    commands:
+      - tapOn:
+          point: "50%,60%"
+      - waitForAnimationToEnd:
+          timeout: 4000
+      - inputText: ${CARD_ELO_DADOS_DIA}
+      - tapOn: "Confirmar"
+      - waitForAnimationToEnd:
+          timeout: 37000 
+
+- runFlow:
+    when:
+      visible: "Confirme os quatro últimos dígitos do seu CPF"
+    commands:
+      - tapOn:
+          point: "50%,60%"
+      - waitForAnimationToEnd:
+          timeout: 4000
+      - inputText: ${CARD_ELO_CPF}
+      - tapOn: "Confirmar"
+      - waitForAnimationToEnd:
+          timeout: 37000 
+
+- runFlow:
+    when:
+      visible: "Confirme o CVV do seu cartão"
+    commands: 
+      - tapOn:
+          point: "50%,60%"
+      - waitForAnimationToEnd:
+          timeout: 4000
+      - inputText: ${CARD_ELO_CVV}
+      - tapOn: "Confirmar"
+      - waitForAnimationToEnd:
+          timeout: 37000 
+
+
+# #CPF
+# - tapOn:
+#     point: "50%,60%"
+# - waitForAnimationToEnd:
+#     timeout: 4000
+# - inputText: ${CARD_ELO_CPF}
+# - tapOn: "Confirmar"
+# - waitForAnimationToEnd:
+#     timeout: 37000 
+
+# #CVV
+# - tapOn:
+#     point: "50%,60%"
+# - waitForAnimationToEnd:
+#     timeout: 4000
+# - inputText: ${CARD_ELO_CVV}
+# - tapOn: "Confirmar"
+# - waitForAnimationToEnd:
+#     timeout: 37000 
+
+# #DIA
+# - tapOn:
+#     point: "50%,60%"
+# - waitForAnimationToEnd:
+#     timeout: 4000
+# - inputText: ${CARD_ELO_DADOS_DIA}
+# - tapOn: "Confirmar"
+# - waitForAnimationToEnd:
+#     timeout: 37000 
+
+
+
+# #MES
+# - tapOn:
+#     point: "50%,60%"
+# - waitForAnimationToEnd:
+#     timeout: 4000
+# - inputText: ${CARD_ELO_DADOS_MES}
+# - tapOn: "Confirmar"
+# - waitForAnimationToEnd:
+#     timeout: 37000 

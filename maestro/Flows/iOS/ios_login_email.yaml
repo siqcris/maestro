@@ -1,0 +1,31 @@
+# flow_contacts_ios.yaml com.apple.MobileAddressBook
+
+appId: br.com.edenred.ticket.stg
+name: Validar realizar login e logout com sucesso - por Email
+tags: 
+  - onboarding
+  - login
+onFlowStart:
+  - runFlow: subflows/ios_login_default.yaml
+env:
+    USERNAME: automacao@gmail.com
+    PASSWORD: Teste@123
+---
+- runFlow: ./subflows/ios_loader_pages.yaml
+
+#Realizar logout
+#Clique no botao profile
+- tapOn: 
+    point: ${output.home.btnProfile}
+
+- extendedWaitUntil:
+    visible: "Meus dados"
+    timeout: 10000 
+- assertVisible: "Meus dados"
+- scrollUntilVisible:
+    element: "Sair da conta"
+    direction: DOWN 
+- tapOn: "Sair da conta"
+- assertVisible: "Você será imediatamente desconectado e direcionado para tela de login"
+- tapOn: "Sair"
+- assertVisible: "Entrar"

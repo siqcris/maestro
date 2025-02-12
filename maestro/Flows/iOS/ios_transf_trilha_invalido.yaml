@@ -1,0 +1,144 @@
+appId: br.com.ticket.stg
+name: Validar transferencia de trilhas - inválido
+tags: 
+  - payments
+  - transf_trilha
+env:
+    USERNAME: automacao+payments@gmail.com
+    PASSWORD: Teste@123
+    CARD_TSF_PASSWORD: "2111"
+onFlowStart:
+  - runFlow: ./subflows/ios_login_default.yaml
+---
+- runFlow: ./subflows/ios_loader_pages.yaml
+
+#Tempo da animação acabar
+- waitForAnimationToEnd:
+    timeout: 10000
+- waitForAnimationToEnd:
+    timeout: 10000   
+
+#Clicar em mais serviços
+- tapOn: ${output.cardServices.moreServices}
+
+#Clicar no cartão
+- tapOn:
+    point: ${output.payments.optBillFirstCard}
+
+#Clicar em transferir saldo entre benefícios
+- assertVisible: "Qual serviço deseja acessar?"
+- tapOn: ${output.cardServices.benefittransfer}
+
+#Valids bottom sheet de aviso
+- assertVisible: "Aviso"
+- assertVisible: "Só é permitido a transferência entre as trilhas restaurante e alimentação"
+
+#Clique em Ok
+- tapOn: "Ok"
+
+#Validar tela de transferencia de saldo
+- assertVisible: "Transferir saldo entre benefício"
+- assertVisible: "Total disponível para transferir"
+- assertVisible: "Use o marcador para editar os valores de cada benefício ou digite nos campos disponíveis"
+
+#Validar que o botão Confirmar fica desabilitado ao entrar na tela
+- assertVisible:
+    text: "Continuar"
+    enabled: false
+
+#Clicar no campo e copiar o valor inicial
+#Clica no campo de Restaurante
+- tapOn:
+    point: ${output.payments.optRestaurant}
+
+#Clique longo no campo
+- longPressOn:
+    point: ${output.payments.optRestaurant}
+
+#Seleciona tudo em pt ou eng
+- tapOn:
+        text: "Selecionar tudo"
+        optional: true 
+- tapOn: 
+        text: "Select All"
+        optional: true 
+
+#Corta em pt ou eng
+- tapOn: 
+        text: "Cortar"
+        optional: true 
+- tapOn:
+        text: "Cut"
+        optional: true 
+
+#Centralizando o botão
+- tapOn:
+    point: ${output.payments.optSwipeCenter}
+
+#Validar que o botão Confirmar fica habilitado após mexer no swipe
+- assertVisible:
+    text: "Continuar"
+    enabled: true
+
+#Clicar no campo e cola o valor inicial já copiado e valida que o botão Continuar fica desabilitado
+#Clica no campo de Restaurante
+- tapOn:
+    point: ${output.payments.optRestaurant}
+#Clique longo no campo
+- longPressOn:
+    point: ${output.payments.optRestaurant}
+
+#Seleciona tudo em pt ou eng
+- tapOn:
+        text: "Selecionar tudo"
+        optional: true 
+- tapOn: 
+        text: "Select All"
+        optional: true 
+
+#Seleciona tudo em pt ou eng
+- tapOn:
+        text: "Colar"
+        optional: true 
+- tapOn:
+        text: "Paste"
+        optional: true 
+ 
+
+#Validar que o botão Confirmar fica desabilitado após colocar o valor inicial
+- assertVisible:
+    text: "Continuar"
+    enabled: false
+
+#Centraliza o swipe para iniciar o fluxo de transf com senha invalida
+#Centralizando o botão para inserir a senha invalida
+- tapOn:
+    point: ${output.payments.optSwipeCenter}
+
+#Clicar em Continuar
+- tapOn: "Continuar"
+
+#Tela de preenchimento de senha invalida
+- assertVisible: "Informe a senha do seu cartão"
+- tapOn:
+    point: ${output.payments.optCardPassword}
+- inputText: ${CARD_TSF_PASSWORD}
+
+#Clicar em continuar
+- tapOn: "Confirmar"
+- waitForAnimationToEnd:
+    timeout: 90000
+
+#Validar mensagem de erro 
+- assertVisible: "Não foi possível realizar sua transferência"
+
+#Clicar em tentar novamente
+- tapOn: "Tentar novamente"
+
+#Clicar em Continuar o fluxo
+- tapOn: "Continuar"
+
+#Validar que após errar a senha, o botão Confirmar fica desabilitado
+- assertVisible:
+    text: "Confirmar"
+    enabled: false

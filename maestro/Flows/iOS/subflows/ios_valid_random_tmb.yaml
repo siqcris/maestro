@@ -1,0 +1,76 @@
+appId: br.com.mobile.ticket.staging
+#Cartao final 6882
+env:
+    CARD_TMB_PASSWORD: "3370"
+    CARD_TMB_CVV: "527"
+    CARD_TMB_CPF: "9932"
+    CARD_TMB_DADOS_DIA: "05"
+    CARD_TMB_DADOS_MES: "10"
+    CARD_TMB_DADOS_ANO: "1986"
+---
+#Preenchimento de senha
+- waitForAnimationToEnd:
+    timeout: 2000  
+- assertVisible: "Confirme a senha do cartão Home Office"
+- tapOn:
+    point: "20%,54%"
+- waitForAnimationToEnd:
+    timeout: 4000
+- inputText: ${CARD_TMB_PASSWORD}
+- tapOn: "Confirmar"
+- waitForAnimationToEnd:
+    timeout: 4000   
+
+#Valid randomica para o produto TMB
+- runFlow:
+    when:
+      visible: "Confirme o mês do seu nascimento"
+    commands:  
+      - tapOn:
+          point: "50%,60%"
+      - waitForAnimationToEnd:
+          timeout: 4000
+      - inputText: ${CARD_TMB_DADOS_MES}
+      - tapOn: "Confirmar"
+      - waitForAnimationToEnd:
+          timeout: 37000 
+
+- runFlow:
+    when:
+      visible: "Confirme o dia do seu nascimento"
+    commands:  
+      - tapOn:
+          point: "50%,60%"
+      - waitForAnimationToEnd:
+          timeout: 4000
+      - inputText: ${CARD_TMB_DADOS_DIA}
+      - tapOn: "Confirmar"
+      - waitForAnimationToEnd:
+          timeout: 37000 
+
+- runFlow:
+    when:
+      visible: "Confirme os quatro últimos dígitos do seu CPF"
+    commands:  
+      - tapOn:
+          point: "50%,60%"
+      - waitForAnimationToEnd:
+          timeout: 4000
+      - inputText: ${CARD_TMB_CPF}
+      - tapOn: "Confirmar"
+      - waitForAnimationToEnd:
+          timeout: 37000 
+
+- runFlow:
+    when:
+      visible: "Confirme o CVV do seu cartão"
+    commands:  
+      - tapOn:
+          point: "50%,60%"
+      - waitForAnimationToEnd:
+          timeout: 4000
+      - inputText: ${CARD_TMB_CVV}
+      - tapOn: "Confirmar"
+      - waitForAnimationToEnd:
+          timeout: 37000 
+

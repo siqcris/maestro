@@ -1,0 +1,47 @@
+appId: br.com.mobile
+name: Validar exibicao dos banners
+tags: 
+  - payments
+  - core
+  - onboarding
+  - login
+
+---
+- waitForAnimationToEnd:
+    timeout: 50000
+
+- waitForAnimationToEnd:
+    timeout: 20000    
+#Banner antigo, comentado pra quando for reativado
+# - runFlow:
+#     when:
+#       visible: "OK, entendi"
+#     commands:
+#         - tapOn: "OK, entendi"
+
+#Banner da Rappi
+- runFlow:
+    when:
+      visible: "Vai pedir delivery e pagar com Ticket? Prefira Rappi!"
+    commands:
+        - tapOn:
+            point: "50%,15%"        
+
+#Banner da nova home
+- runFlow:
+    when:
+      visible: "Novidades no app!
+
+        Nosso app te oferece serviços gerais e do cartão, pagamentos e descontos. Veja onde encontrar tudo isso!"
+    commands:
+        - tapOn: "Pular"   
+
+#Banner da RAPPI
+- runFlow:
+    when:
+      visible: "Vai pedir delivery e pagar com Ticket? Prefira Rappi!"
+    commands:
+        - tapOn: 
+            point: "52%,95%"         
+
+- assertVisible: "Adicionar cartão"

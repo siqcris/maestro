@@ -1,0 +1,57 @@
+appId: br.com.mobile
+name: Validar realizar preenchimento do formulario de cadastro com dados inválidos
+tags: 
+  - onboarding
+  - cadastro
+  - acesso_deslogado
+env:
+    EMAIL: automacao@gmail.com
+    CONFIRM_EMAIL: automacao@gmail.com
+    CPF: 12065967404
+    NAME: A
+    TEL: 551199206
+    DATE: 121210004
+---
+#Realizar cadastro
+- launchApp:
+    clearState: true
+- waitForAnimationToEnd:
+    timeout: 5000
+- tapOn: "Crie sua conta Ticket"
+- assertVisible: "Que bom ver você\npor aqui!"
+- tapOn: "CPF"
+- inputText: ${CPF}
+- hideKeyboard
+- tapOn:
+    point: "7%,71%"
+- tapOn:
+    point: "7%,76%"
+- tapOn:
+    point: "7%,81%"
+- tapOn:
+    point: "7%,85%"
+- tapOn: "Avançar"
+- assertVisible: "Informe seus dados pessoais"
+- tapOn: "Nome completo"
+- inputText: ${NAME}
+- hideKeyboard
+- tapOn: "Celular"
+- inputText: ${TEL}
+- hideKeyboard
+- tapOn: "Data de nascimento"
+- inputText: ${DATE}
+- hideKeyboard
+- tapOn: "E-mail"
+- inputText: ${EMAIL}
+- hideKeyboard
+- tapOn: "Confirmar e-mail"
+- inputText: ${CONFIRM_EMAIL}
+- hideKeyboard
+- scrollUntilVisible:
+    element: "Avançar"
+    direction: DOWN 
+- assertVisible: "Nome inválido"
+- assertVisible: "Celular inválido"
+- assertVisible: "Digite uma data válida"
+- assertVisible: "E-mail inválido"
+

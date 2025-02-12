@@ -1,0 +1,25 @@
+appId: br.com.ticket.stg
+name: VAlidar aba Vantagens
+tags: 
+  - core
+  - vantagens
+env:
+    USERNAME: automacao@gmail.com
+    PASSWORD: Teste@123
+onFlowStart:
+  - runFlow: ./subflows/ios_login_default.yaml
+---
+- runFlow: ./subflows/ios_loader_pages.yaml
+
+# Acesso a aba vantagens e validando login automatico
+- waitForAnimationToEnd:
+    timeout: 5000
+- tapOn: ${output.home.btnTabbarAdvantages}
+- waitForAnimationToEnd:
+    timeout: 5000
+
+- assertVisible: "Meus Créditos"
+
+- assertVisible: ${output.advantages.optPerfil}
+- tapOn: ${output.advantages.optPerfil}
+- assertVisible: ${USERNAME}

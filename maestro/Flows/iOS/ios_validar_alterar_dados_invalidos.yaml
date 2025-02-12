@@ -1,0 +1,443 @@
+appId: br.com.ticket.stg
+name: Validar alterar dados cadastrais com dados inválidos (Nome/Data de Nascimento)
+tags: 
+  - onboarding
+  - meu_perfil
+  - alterar_dados
+env:
+    USERNAME: automacao@gmail.com
+    PASSWORD: Teste@123
+
+onFlowStart:
+  - runFlow: ./subflows/ios_login_default.yaml
+---
+- runFlow: ./subflows/ios_loader_pages.yaml
+
+#Clicar em Meus dados
+- waitForAnimationToEnd:
+    timeout: 60000
+- tapOn:
+    point: ${output.home.btnProfile}
+- assertVisible: "Meus dados"
+- tapOn: ${output.profile.optRegistrationData}
+- assertVisible: "Após inserir o CPF e o E-mail, não será possível editar essas informações."
+
+
+#Nome
+- tapOn: 
+    point: ${output.registrationData.name}
+- assertVisible: "Alterar nome"
+#Validar nao inserir Nome
+- tapOn:
+    point: ${output.registrationData.formNamefldFullName} 
+- "eraseText"
+- assertVisible: "Nome inválido"
+#Garantir que o botão está inativo - ele clica e não deve ter ação
+- tapOn: "concluído"    
+- tapOn: 
+    point: ${output.registrationData.formNameBtnSave} 
+- assertVisible: "Nome inválido"
+#Validar inserir Nome com uma letra
+- tapOn:
+    point: ${output.registrationData.formNamefldFullName}
+- inputText: "A"
+- assertVisible: "Nome inválido"
+#Garantir que o botão está inativo - ele clica e não deve ter ação
+- tapOn: "concluído"    
+- tapOn: 
+    point: ${output.registrationData.formNameBtnSave} 
+- assertVisible: "Nome inválido"
+#Validar inserir Nome com numeros
+- tapOn:
+    point: ${output.registrationData.formNamefldFullName}
+- "eraseText"
+- inputText: "11111"
+- assertVisible: "Nome inválido"
+#Garantir que o botão está inativo - ele clica e não deve ter ação
+- tapOn: "concluído"    
+- tapOn: 
+    point: ${output.registrationData.formNameBtnSave} 
+- assertVisible: "Nome inválido"
+#Validar inserir Nome com caracteres
+- tapOn:
+    point: ${output.registrationData.formNamefldFullName}
+- "eraseText"
+- inputText: "####"
+- assertVisible: "Nome inválido"
+#Garantir que o botão está inativo - ele clica e não deve ter ação
+- tapOn: "concluído"    
+- tapOn: 
+    point: ${output.registrationData.formNameBtnSave} 
+- assertVisible: "Nome inválido"
+- tapOn:
+    point: ${output.registrationData.formNamefldFullName}
+- "eraseText"
+- inputText: "%%%%"
+- assertVisible: "Nome inválido"
+#Garantir que o botão está inativo - ele clica e não deve ter ação
+- tapOn: "concluído"    
+- tapOn: 
+    point: ${output.registrationData.formNameBtnSave} 
+- assertVisible: "Nome inválido"
+- tapOn:
+    point: ${output.registrationData.formNamefldFullName}
+- "eraseText"
+- inputText: "..."
+- assertVisible: "Nome inválido"
+#Garantir que o botão está inativo - ele clica e não deve ter ação
+- tapOn: "concluído"    
+- tapOn: 
+    point: ${output.registrationData.formNameBtnSave} 
+- assertVisible: "Nome inválido"
+- tapOn:
+    point: ${output.registrationData.formNamefldFullName}
+- "eraseText"
+- inputText: "@@@"
+- assertVisible: "Nome inválido"
+#Garantir que o botão está inativo - ele clica e não deve ter ação
+- tapOn: "concluído"    
+- tapOn: 
+    point: ${output.registrationData.formNameBtnSave} 
+- assertVisible: "Nome inválido"
+- tapOn:
+    point: ${output.registrationData.formNamefldFullName}
+- "eraseText"
+- inputText: "***"
+- assertVisible: "Nome inválido"
+#Garantir que o botão está inativo - ele clica e não deve ter ação
+- tapOn: "concluído"    
+- tapOn: 
+    point: ${output.registrationData.formNameBtnSave} 
+- assertVisible: "Nome inválido"
+- tapOn:
+    point: ${output.registrationData.formNamefldFullName}
+- "eraseText"
+- inputText: "$$$"
+- assertVisible: "Nome inválido"
+#Garantir que o botão está inativo - ele clica e não deve ter ação
+- tapOn: "concluído"    
+- tapOn: 
+    point: ${output.registrationData.formNameBtnSave} 
+- assertVisible: "Nome inválido"
+#Validar inserir Nome com letras e numeros
+- tapOn:
+    point: ${output.registrationData.formNamefldFullName}
+- "eraseText"
+- inputText: "AA11"
+- assertVisible: "Nome inválido"
+#Garantir que o botão está inativo - ele clica e não deve ter ação
+- tapOn: "concluído"    
+- tapOn: 
+    point: ${output.registrationData.formNameBtnSave} 
+- assertVisible: "Nome inválido"
+- tapOn:
+    point: ${output.registrationData.formNamefldFullName}
+- "eraseText"
+- inputText: "11AA"
+- assertVisible: "Nome inválido"
+#Garantir que o botão está inativo - ele clica e não deve ter ação
+- tapOn: "concluído"    
+- tapOn: 
+    point: ${output.registrationData.formNameBtnSave} 
+- assertVisible: "Nome inválido"
+#Validar inserir Nome com letras e caracteres
+- tapOn:
+    point: ${output.registrationData.formNamefldFullName}
+- "eraseText"
+- inputText: "AA#"
+- assertVisible: "Nome inválido"
+#Garantir que o botão está inativo - ele clica e não deve ter ação
+- tapOn: "concluído"    
+- tapOn: 
+    point: ${output.registrationData.formNameBtnSave} 
+- assertVisible: "Nome inválido"
+- tapOn:
+    point: ${output.registrationData.formNamefldFullName}
+- "eraseText"
+- inputText: "AA%"
+- assertVisible: "Nome inválido"
+- "eraseText"
+- inputText: "AA."
+- assertVisible: "Nome inválido"
+#Garantir que o botão está inativo - ele clica e não deve ter ação
+- tapOn: "concluído"    
+- tapOn: 
+    point: ${output.registrationData.formNameBtnSave} 
+- assertVisible: "Nome inválido"
+- tapOn:
+    point: ${output.registrationData.formNamefldFullName}
+- "eraseText"
+- inputText: "AA@"
+- assertVisible: "Nome inválido"
+#Garantir que o botão está inativo - ele clica e não deve ter ação
+- tapOn: "concluído"    
+- tapOn: 
+    point: ${output.registrationData.formNameBtnSave} 
+- assertVisible: "Nome inválido"
+- tapOn:
+    point: ${output.registrationData.formNamefldFullName}
+- "eraseText"
+- inputText: "AA*"
+- assertVisible: "Nome inválido"
+#Garantir que o botão está inativo - ele clica e não deve ter ação
+- tapOn: "concluído"    
+- tapOn: 
+    point: ${output.registrationData.formNameBtnSave} 
+- assertVisible: "Nome inválido"
+- tapOn:
+    point: ${output.registrationData.formNamefldFullName}
+- "eraseText"
+- inputText: "AA$"
+- assertVisible: "Nome inválido"
+#Garantir que o botão está inativo - ele clica e não deve ter ação
+- tapOn: "concluído"    
+- tapOn: 
+    point: ${output.registrationData.formNameBtnSave} 
+- assertVisible: "Nome inválido"
+#Validar inserir Nome correto
+- tapOn:
+    point: ${output.registrationData.formNamefldFullName}
+- "eraseText"
+- inputRandomPersonName 
+#Nome Social
+- tapOn:
+    point: "50%,45%"
+#Validar inserir Nome Social com uma letra
+- "eraseText"
+- inputText: "A"
+- assertVisible: "Nome social inválido"
+#Garantir que o botão está inativo - ele clica e não deve ter ação
+- tapOn: "concluído"    
+- tapOn: 
+    point: ${output.registrationData.formNameBtnSave} 
+- assertVisible: "Nome social inválido"
+#Validar inserir Nome Social com numeros
+- tapOn:
+    point: "50%,45%"
+- "eraseText"
+- inputText: "11111"
+- assertVisible: "Nome social inválido"
+#Garantir que o botão está inativo - ele clica e não deve ter ação
+- tapOn: "concluído"    
+- tapOn: 
+    point: ${output.registrationData.formNameBtnSave} 
+- assertVisible: "Nome social inválido"
+#Validar inserir Nome Social com caracteres
+- tapOn:
+    point: "50%,45%"
+- "eraseText"
+- inputText: "####"
+- assertVisible: "Nome social inválido"
+#Garantir que o botão está inativo - ele clica e não deve ter ação
+- tapOn: "concluído"    
+- tapOn: 
+    point: ${output.registrationData.formNameBtnSave} 
+- assertVisible: "Nome social inválido"
+- tapOn:
+    point: "50%,45%"
+- "eraseText"
+- inputText: "%%%%"
+- assertVisible: "Nome social inválido"
+#Garantir que o botão está inativo - ele clica e não deve ter ação
+- tapOn: "concluído"    
+- tapOn: 
+    point: ${output.registrationData.formNameBtnSave} 
+- assertVisible: "Nome social inválido"
+- tapOn:
+    point: "50%,45%"
+- "eraseText"
+- inputText: "..."
+- assertVisible: "Nome social inválido"
+#Garantir que o botão está inativo - ele clica e não deve ter ação
+- tapOn: "concluído"    
+- tapOn: 
+    point: ${output.registrationData.formNameBtnSave} 
+- assertVisible: "Nome social inválido"
+- tapOn:
+    point: "50%,45%"
+- "eraseText"
+- inputText: "@@@"
+- assertVisible: "Nome social inválido"
+#Garantir que o botão está inativo - ele clica e não deve ter ação
+- tapOn: "concluído"    
+- tapOn: 
+    point: ${output.registrationData.formNameBtnSave} 
+- assertVisible: "Nome social inválido"
+- tapOn:
+    point: "50%,45%"
+- "eraseText"
+- inputText: "***"
+- assertVisible: "Nome social inválido"
+#Garantir que o botão está inativo - ele clica e não deve ter ação
+- tapOn: "concluído"    
+- tapOn: 
+    point: ${output.registrationData.formNameBtnSave} 
+- assertVisible: "Nome social inválido"
+- tapOn:
+    point: "50%,45%"
+- "eraseText"
+- inputText: "$$$"
+- assertVisible: "Nome social inválido"
+#Garantir que o botão está inativo - ele clica e não deve ter ação
+- tapOn: "concluído"    
+- tapOn: 
+    point: ${output.registrationData.formNameBtnSave} 
+- assertVisible: "Nome social inválido"
+#Validar inserir Nome Social com letras e numeros
+- tapOn:
+    point: "50%,45%"
+- "eraseText"
+- inputText: "AA11"
+- assertVisible: "Nome social inválido"
+#Garantir que o botão está inativo - ele clica e não deve ter ação
+- tapOn: "concluído"    
+- tapOn: 
+    point: ${output.registrationData.formNameBtnSave} 
+- assertVisible: "Nome social inválido"
+- tapOn:
+    point: "50%,45%"
+- "eraseText"
+- inputText: "11AA"
+- assertVisible: "Nome social inválido"
+#Garantir que o botão está inativo - ele clica e não deve ter ação
+- tapOn: "concluído"    
+- tapOn: 
+    point: ${output.registrationData.formNameBtnSave} 
+- assertVisible: "Nome social inválido"
+#Validar inserir Nome Social com letras e caracteres
+- tapOn:
+    point: "50%,45%"
+- "eraseText"
+- inputText: "AA#"
+- assertVisible: "Nome social inválido"
+#Garantir que o botão está inativo - ele clica e não deve ter ação
+- tapOn: "concluído"    
+- tapOn: 
+    point: ${output.registrationData.formNameBtnSave} 
+- assertVisible: "Nome social inválido"
+- tapOn:
+    point: "50%,45%"
+- "eraseText"
+- inputText: "AA%"
+- assertVisible: "Nome social inválido"
+#Garantir que o botão está inativo - ele clica e não deve ter ação
+- tapOn: "concluído"    
+- tapOn: 
+    point: ${output.registrationData.formNameBtnSave} 
+- assertVisible: "Nome social inválido"
+- tapOn:
+    point: "50%,45%"
+- "eraseText"
+- inputText: "AA."
+- assertVisible: "Nome social inválido"
+#Garantir que o botão está inativo - ele clica e não deve ter ação
+- tapOn: "concluído"    
+- tapOn: 
+    point: ${output.registrationData.formNameBtnSave} 
+- assertVisible: "Nome social inválido"
+- tapOn:
+    point: "50%,45%"
+- "eraseText"
+- inputText: "AA@"
+- assertVisible: "Nome social inválido"
+#Garantir que o botão está inativo - ele clica e não deve ter ação
+- tapOn: "concluído"    
+- tapOn: 
+    point: ${output.registrationData.formNameBtnSave} 
+- assertVisible: "Nome social inválido"
+- tapOn:
+    point: "50%,45%"
+- "eraseText"
+- inputText: "AA*"
+- assertVisible: "Nome social inválido"
+#Garantir que o botão está inativo - ele clica e não deve ter ação
+- tapOn: "concluído"    
+- tapOn: 
+    point: ${output.registrationData.formNameBtnSave} 
+- assertVisible: "Nome social inválido"
+- tapOn:
+    point: "50%,45%"
+- "eraseText"
+- inputText: "AA$"
+- assertVisible: "Nome social inválido"
+#Garantir que o botão está inativo - ele clica e não deve ter ação
+
+
+- tapOn: "concluído"    
+- tapOn: 
+    point: ${output.registrationData.formNameBtnSave} 
+- assertVisible: "Nome social inválido"
+#Ir para Data de nascimento
+- tapOn:
+    point: "6%,7%"
+- assertVisible: "Você editou seus dados e não salvou, deseja sair mesmo assim?"
+- tapOn: "Sair assim mesmo"
+#Data de nascimento
+- assertVisible: "Após inserir o CPF e o E-mail, não será possível editar essas informações."
+- tapOn: ${output.profile.optRegistrationData}
+
+- tapOn:
+    point: "50%,63%"
+#Nao iserir data de nascimento
+- longPressOn:
+    point: "50%,30%"
+- tapOn:
+    point: "48%,23%"
+- eraseText
+- assertVisible: "Digite uma data"
+#Garantir que o botão está inativo - ele clica e não deve ter ação
+- tapOn:
+    point: "49%,52%"
+   
+- tapOn: 
+    point: ${output.registrationData.formNameBtnSave} 
+- assertVisible: "Digite uma data"
+#Validar inserir Data de nascimento inválida
+- tapOn:
+    point: "50%,30%"
+- inputText: "11111111"
+- assertVisible: "Digite uma data válida"
+#Garantir que o botão está inativo - ele clica e não deve ter ação
+- tapOn:
+    point: "49%,52%"
+   
+- tapOn: 
+    point: ${output.registrationData.formNameBtnSave} 
+- assertVisible: "Digite uma data válida"
+#Validar inserir apenas o Dia
+- tapOn:
+    point: "50%,30%"
+- eraseText
+- inputText: "11"
+- assertVisible: "Digite uma data válida"
+#Garantir que o botão está inativo - ele clica e não deve ter ação
+- tapOn:
+    point: "49%,52%"
+   
+- tapOn: 
+    point: ${output.registrationData.formNameBtnSave} 
+- assertVisible: "Digite uma data válida"
+#Validar inserir mês inválido
+- tapOn:
+    point: "50%,30%"
+- inputText: "501995"
+- assertVisible: "Digite uma data válida"
+#Garantir que o botão está inativo - ele clica e não deve ter ação
+- tapOn:
+    point: "49%,52%"
+  
+- tapOn: 
+    point: ${output.registrationData.formNameBtnSave} 
+- assertVisible: "Digite uma data válida"
+#Validar inserir ano inválido
+- tapOn:
+    point: "50%,30%"
+- eraseText
+- inputText: "14078288"
+- assertVisible: "Digite uma data válida"
+#Garantir que o botão está inativo - ele clica e não deve ter ação
+- tapOn:
+    point: "49%,52%" 
+- tapOn: 
+    point: ${output.registrationData.formNameBtnSave} 
+- assertVisible: "Digite uma data válida"

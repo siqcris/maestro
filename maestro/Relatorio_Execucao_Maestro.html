@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Relatório de Execução de Teste</title>
+<style>
+body { font-family: Arial, sans-serif; }
+h1 { color: #333; text-align: center; }
+table { border-collapse: collapse; width: 100%; }
+th, td { border: 1px solid #ddd; padding: 8px; }
+th { background-color: #4CAF50; color: white; }
+tr:nth-child(even) { background-color: #f2f2f2; }
+.failed { color: #ff0000; font-weight: bold; }
+.passed { color: #008000; font-weight: bold; }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<h1>Relatório de Execução de Teste - Ticket</h1>
+<table>
+<thead><tr><th>Test Suite</th><th>Tests</th><th>Failures</th><th>Time (seconds)</th><th>Device</th></tr></thead>
+<tbody>
+<tr><td>Test Suite</td><td>1</td><td>0</td><td>266</td><td>emulator-5554</td></tr>
+</tbody>
+</table>
+<table>
+<thead><tr><th>ID</th><th>Test Case</th><th>Time (seconds)</th><th>Result</th><th>Details</th></tr></thead>
+<tbody>
+<tr><td>CT01</td><td>Validar pagamento de boleto após errar a senha</td><td>266</td><td class="passed">Passed</td><td></td></tr>
+</tbody>
+</table>
+</body>
+</html>

@@ -1,0 +1,170 @@
+appId: br.com.ticket.stg
+name: Validar pagamento de boleto após errar senha
+tags: 
+  - payments
+  - pgto_boleto
+
+env:
+    USERNAME: automacao+payments@gmail.com
+    PASSWORD: Teste@123
+    BOLETO: "836200000005499700470002000000004200527806220051" 
+    CARD_TMB_PASSWORD_INVALID: "1234"
+    CARD_TMB_CVV: "935"
+    CARD_TMB_CPF: "9932"
+    CARD_TMB_DADOS_DIA: "05"
+    CARD_TMB_DADOS_MES: "10"
+    CARD_TMB_DADOS_ANO: "1986" 
+
+onFlowStart:
+  - runFlow: ./subflows/ios_login_default.yaml
+---
+- runFlow: ./subflows/ios_loader_pages.yaml
+
+## Validacao Pagamento para o Produto Ticket Super Flex Multi Bin após errar a senha (TSF) (Será feito duas vezes, errando na primeira vez e acertando na segunda)
+# Clicar no icone 'Pagar', selecionar a opção(de pagamento) Boleto e selecionar o produto que será usado para efetuar o pagamento
+#TSF FINAL 7047
+
+# Tentativa de pagamento com erro na senha: INICIO
+#Trecho Antes do boleto inicio
+- waitForAnimationToEnd:
+    timeout: 10000
+- waitForAnimationToEnd:
+    timeout: 5000
+    
+- waitForAnimationToEnd:
+    timeout: 8000 
+- assertVisible: "Pagar"
+- tapOn: 
+    point: ${output.home.btnTabbarPay}
+
+- assertVisible: "Qual forma de pagamento deseja usar?"
+- tapOn: ${output.payments.btnChoosePaymentBill}
+
+- assertVisible: "Com qual cartão deseja pagar?"
+- tapOn: 
+    point: ${output.payments.optBillSecondCard}
+
+#Chamando inicio do fluxo de pagamento até validacao randomica  
+- runFlow: 
+    file: ./subflows/ios_pagamento_boleto_inicio.yaml  
+
+#Chamando Validacao randomica
+    #Preenchimento de senha     
+- waitForAnimationToEnd:
+    timeout: 2000  
+- assertVisible: "Confirme a senha do cartão Home Office"
+- tapOn:
+    point: ${output.payments.btnValidSenha}
+- waitForAnimationToEnd:
+    timeout: 4000
+- inputText: ${CARD_TMB_PASSWORD_INVALID}
+- tapOn: "Confirmar"
+- waitForAnimationToEnd:
+    timeout: 4000   
+
+#Valid randomica para o produto TMB
+- runFlow:
+    when:
+      visible: "Confirme o mês do seu nascimento"
+    commands:  
+      - tapOn:
+          point: ${output.payments.btnValidRandom}
+      - waitForAnimationToEnd:
+          timeout: 4000
+      - inputText: ${CARD_TMB_DADOS_MES}
+      - tapOn: "Confirmar"
+      - waitForAnimationToEnd:
+          timeout: 37000 
+
+- runFlow:
+    when:
+      visible: "Confirme o dia do seu nascimento"
+    commands:  
+      - tapOn:
+          point: ${output.payments.btnValidRandom}
+      - waitForAnimationToEnd:
+          timeout: 4000
+      - inputText: ${CARD_TMB_DADOS_DIA}
+      - tapOn: "Confirmar"
+      - waitForAnimationToEnd:
+          timeout: 37000 
+
+- runFlow:
+    when:
+      visible: "Confirme os quatro últimos dígitos do seu CPF"
+    commands:  
+      - tapOn:
+          point: ${output.payments.btnValidRandom}
+      - waitForAnimationToEnd:
+          timeout: 4000
+      - inputText: ${CARD_TMB_CPF}
+      - tapOn: "Confirmar"
+      - waitForAnimationToEnd:
+          timeout: 37000 
+
+- runFlow:
+    when:
+      visible: "Confirme o CVV do seu cartão"
+    commands:  
+      - tapOn:
+          point: ${output.payments.btnValidRandom}
+      - waitForAnimationToEnd:
+          timeout: 4000
+      - inputText: ${CARD_TMB_CVV}
+      - tapOn: "Confirmar"
+      - waitForAnimationToEnd:
+          timeout: 37000  
+
+# Tentativa de pagamento com erro na senha: FIM
+#   Fazer asserção na tela de retorno e direcionar para a home
+- waitForAnimationToEnd:
+    timeout: 10000
+- waitForAnimationToEnd:
+    timeout: 5000
+
+- assertVisible: "Operação não realizada"
+- assertVisible: "Dados inválidos."
+- assertVisible: "Tentar novamente"
+- tapOn: "Tentar novamente" #Usuario deve ser redirecionado para a tela de inserir senha
+
+- assertVisible: "Confirme a senha do cartão Home Office"
+- tapOn: 
+    point: ${output.header.btnBack} #Clique para fechar a jornada de pagamento e validar que usuario é redirecionado para a home cm a bottomSheet que aparece após clicar no botão Pagar
+- assertVisible: "Qual forma de pagamento deseja usar?"
+
+- tapOn: 
+    point: ${output.header.btnBack} #CLique para o usuário ir para a home e iniciar o fluxo de pagamento do zero até a tela de sucesso
+
+
+
+
+#Trecho Antes do boleto inicio
+- waitForAnimationToEnd:
+    timeout: 10000
+- waitForAnimationToEnd:
+    timeout: 5000
+    
+- waitForAnimationToEnd:
+    timeout: 8000 
+- assertVisible: "Pagar"
+- tapOn: 
+    point: ${output.home.btnTabbarPay}
+
+- assertVisible: "Qual forma de pagamento deseja usar?"
+- tapOn: ${output.payments.btnChoosePaymentBill}
+
+- assertVisible: "Com qual cartão deseja pagar?"
+- tapOn: 
+    point: ${output.payments.optBillSecondCard}
+
+#Chamando inicio do fluxo de pagamento até validacao randomica  
+- runFlow: 
+    file: ./subflows/ios_pagamento_boleto_inicio.yaml  
+ #Chamando Validacao randomica
+- runFlow: 
+    file: ./subflows/ios_valid_random_tsf.yaml
+#Chamando continuacao do fluxo de pagamento após validacao randomica
+- runFlow: 
+    file: ./subflows/ios_pagamento_boleto_fim.yaml  
+
+

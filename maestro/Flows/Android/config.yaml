@@ -1,0 +1,8 @@
+# config.yaml
+executionOrder:
+    continueOnFailure: false # default is true
+notifications:
+  email:
+    enabled: true
+    recipients:
+      - siqueira.cris2@gmail.com

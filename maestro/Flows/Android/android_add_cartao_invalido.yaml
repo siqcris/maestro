@@ -1,0 +1,130 @@
+appId: br.com.mobile
+name: Validar adicionar cartão com dados inválidos
+tags: 
+  - core
+  - cartao
+  - add_cartao
+env:
+#Cartao com menos caracteres
+    CARTAO_MENOS: "1123"
+#Cartao invalido
+    CARTAO_INV: "6033400000568692"
+#Cartao valido ja existente na carteira
+    CARTAO_EXIS: "6026514561781052" 
+    S_CARTAO_EXIS: "2111"
+#Cartao valido com senha invalida
+    CARTAO_S_INV: "6026514514727137"
+    S_CARTAO_S_INV: "9999"      
+#Cartao invalido
+    CARTAO_3_TENT: "6026514514727135"
+    S_CARTAO_3_TENT: "7353"
+
+    USERNAME: ticket.automacao+5@gmail.com
+    PASSWORD: Teste@123
+onFlowStart:
+  - runFlow: ./subflows/android_login_default.yaml
+---
+- runFlow: subflows/android_loader_pages.yaml
+
+#Clicar em adicionar cartão
+- assertVisible: ${output.home.btnAddCard}
+- tapOn: ${output.home.btnAddCard}
+- assertVisible: "Olá, agora vamos adicionar seu benefício em nosso sistema."
+#Adicionar cartão existente na carteira
+- tapOn: 
+    point: ${output.addCard.fldCardNumber}
+- inputText: ${CARTAO_EXIS}
+- tapOn: "Apelido do cartão"
+- inputRandomText 
+- scrollUntilVisible:
+    element: ${output.addCard.btnContinue}
+    direction: DOWN 
+- tapOn: ${output.addCard.btnContinue}
+- assertVisible: "Boa notícia, encontramos as informações do seu cartão no nosso sistema. Agora, confirme a senha que recebeu junto com o cartão"
+- tapOn: 
+    point: ${output.addCard.fldPassword}
+- inputText: ${S_CARTAO_EXIS}
+- tapOn: 
+    point: ${output.addCard.fldConfirmPassword}
+- inputText: ${S_CARTAO_EXIS}
+- scrollUntilVisible:
+    element: ${output.addCard.btnConfirmPassword}
+    direction: DOWN 
+- tapOn: ${output.addCard.btnConfirmPassword}
+- assertVisible: "Cartão já cadastrado"
+- tapOn: "Acesse o saldo disponível, extrato detalhado e muito mais deste cartão."
+
+### Redirecionamento pra home - valid de senha incorreta
+- tapOn: "Ir para home"
+#Clicar em adicionar cartão
+- tapOn: ${output.home.btnAddCard}
+- assertVisible: "Olá, agora vamos adicionar seu benefício em nosso sistema."
+
+# #Adicionar cartão senha inválida
+- tapOn: 
+    point: ${output.addCard.fldCardNumber}
+- inputText: ${CARTAO_S_INV}
+
+
+- scrollUntilVisible:
+    element: ${output.addCard.btnContinue}
+    direction: DOWN 
+- tapOn: ${output.addCard.btnContinue}
+- assertVisible: "Boa notícia, encontramos as informações do seu cartão no nosso sistema. Agora, confirme a senha que recebeu junto com o cartão"
+- tapOn: 
+    point: ${output.addCard.fldPassword}
+- inputText: ${S_CARTAO_S_INV}
+- hideKeyboard
+- tapOn: 
+    point: ${output.addCard.fldConfirmPassword}
+- inputText: ${S_CARTAO_S_INV}
+- scrollUntilVisible:
+    element: ${output.addCard.btnConfirmPassword}
+    direction: DOWN 
+- tapOn: ${output.addCard.btnConfirmPassword}
+
+- waitForAnimationToEnd:
+    timeout: 50000
+
+#Validando textos da bottom sheet de troca de senha
+- assertVisible: "Senha incorreta"
+- tapOn: "Após 5 tentativas incorretas, sua senha será bloqueada.\ 
+
+
+    Confira a carta que veio junto com o seu cartão porque a senha está lá.
+
+
+    Caso tenha esquecido a senha, por favor, entre em contato com a Central de Atendimento."
+
+#Clique no botão entendi  (Usuario volta para a tela de senha da adicao de cartao)
+- tapOn: "Entendi"
+
+# Voltar para a tela de add cartão    
+ 
+ #Voltando para a home para iniciar um novo fluxo de add card com campos limpos
+- tapOn:
+    point: ${output.header.btnBack}
+- tapOn:
+    point: ${output.header.btnBack}  
+
+#Novo fluxo de add card com campos limpos
+- tapOn: ${output.home.btnAddCard}
+
+#Adicionar cartão com menos caracteres
+- tapOn: 
+    point: ${output.addCard.fldCardNumber}
+- inputText: ${CARTAO_MENOS}
+- assertVisible: "Número do cartão inválido"
+- hideKeyboard
+
+#Adicionar cartão inválido 
+- tapOn: 
+    point: ${output.addCard.fldCardNumber}
+- "eraseText"
+- inputText: ${CARTAO_INV}
+- scrollUntilVisible:
+    element: ${output.addCard.btnContinue}
+    direction: DOWN 
+- tapOn: ${output.addCard.btnContinue}
+- assertVisible: "Erro ao cadastrar cartão"
+- tapOn: "Ocorreu um erro ao cadastrar o cartão. Verifique os dados e tente novamente."

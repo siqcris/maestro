@@ -1,0 +1,53 @@
+# flow_contacts_ios.yaml com.apple.MobileAddressBook
+appId: br.com.mobile
+name: Validar realizar login e logout com sucesso - por Email
+tags: 
+  - onboarding
+  - login
+env:
+    USERNAME: automacao@gmail.com
+    PASSWORD: Teste@123
+---
+#Realizar Login valido
+- launchApp:
+    clearState: true
+- waitForAnimationToEnd:
+    timeout: 5000
+- tapOn: "Entrar"
+- extendedWaitUntil:
+    visible: "Acesse sua conta"
+    timeout: 10000 
+- tapOn:
+    id: "login"
+- inputText: ${USERNAME}
+- tapOn:
+    id: "password"
+- inputText: ${PASSWORD}
+- scrollUntilVisible:
+    element: "Avançar"
+    direction: DOWN 
+- tapOn: "Avançar"
+#Aceitar campanha
+- waitForAnimationToEnd:
+    timeout: 10000
+- runFlow:
+    when:
+      visible: "OK, entendi"
+    commands:
+        - tapOn: "OK, entendi"
+- assertVisible: "Adicionar\ \ncartão"
+- assertVisible: "Carteira"
+#Realizar logout
+- tapOn:
+    point: "90%,7%"
+- extendedWaitUntil:
+    visible: "Meus dados"
+    timeout: 10000 
+- assertVisible: "Meus dados"
+- scrollUntilVisible:
+    element: "Sair da conta"
+    direction: DOWN 
+- tapOn: "Sair da conta"
+- assertVisible: "Você será imediatamente desconectado e direcionado para tela de login"
+- tapOn: "Sair"
+- assertVisible: "Entrar"

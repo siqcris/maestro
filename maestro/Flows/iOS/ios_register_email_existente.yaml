@@ -1,0 +1,63 @@
+appId: br.com.edenred.stg
+name: Validar realizar preenchimento do formulario de cadastro com e-mail existente
+tags: 
+  - onboarding
+  - cadastro
+  - acesso_deslogado
+env:
+    EMAIL: automacao@gmail.com
+    CPF: 12065967404
+    NAME: John Senna
+    TEL: 5511992066269
+    DATE: 120419994
+---
+- runFlow: ./subflows/ios_loader_pages.yaml
+#Realizar cadastro
+- launchApp:
+    clearState: true
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertVisible: "Crie sua conta Ticket"
+- tapOn: "Crie sua conta Ticket"
+- assertVisible: "Que bom ver você\npor aqui!"
+- tapOn: "CPF"
+- inputText: "120"
+- inputText: "659"
+- inputText: "674"
+- inputText: "04"
+- tapOn: "Para fazer parte do mundo Ticket é super fácil, digite seu CPF abaixo:"
+- tapOn:
+    point: "7%,75%"
+- tapOn:
+    point: "7%,80%"
+- tapOn:
+    point: "7%,86%"
+- tapOn:
+    point: "7%,91%"
+- scrollUntilVisible:
+    element: "Avançar"
+    direction: DOWN
+- tapOn: "Avançar"
+- assertVisible: "Informe seus dados pessoais"
+- tapOn: "Nome completo"
+- inputText: ${NAME}
+- pressKey: Enter
+- tapOn: "Todos os campos são obrigatórios"
+- tapOn: "Celular"
+- inputText: ${TEL}
+- tapOn: "Data de nascimento"
+- inputText: ${DATE}
+- scrollUntilVisible:
+    element: "E-mail"
+    direction: DOWN 
+- tapOn: "E-mail"
+- inputText: ${EMAIL}
+- pressKey: Enter
+- tapOn: "E-mail"
+- tapOn: "Confirmar e-mail"
+- inputText: ${EMAIL}
+- pressKey: Enter
+- tapOn: "Avançar"
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertVisible: "Usuário já cadastrado"

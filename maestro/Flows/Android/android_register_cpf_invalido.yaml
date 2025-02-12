@@ -1,0 +1,21 @@
+appId: br.com.mobile
+name: Validar realizar preenchimento do formulario de cadastro com CPF inválido
+tags: 
+  - onboarding
+  - cadastro
+  - acesso_deslogado
+env:
+    CPF: 44530477894
+---
+#Realizar cadastro com CPF invalido
+- launchApp:
+    clearState: true
+- waitForAnimationToEnd:
+    timeout: 5000
+- tapOn: "Crie sua conta Ticket"
+- assertVisible: "Que bom ver você\npor aqui!"
+- tapOn: "CPF"
+- inputText: ${CPF}
+- hideKeyboard
+- assertVisible: "Digite um CPF válido"
+

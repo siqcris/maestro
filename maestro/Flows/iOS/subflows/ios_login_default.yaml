@@ -1,0 +1,75 @@
+# flow_contacts_ios.yaml com.apple.MobileAddressBook
+
+appId: br.com.edenred.ticket.stg
+name: Modelo generico de login
+tags: 
+  - onboarding
+  - login
+---
+- runFlow: ios_loader_pages.yaml
+#Realizar Login valido
+- launchApp:
+    clearState: true
+- waitForAnimationToEnd:
+    timeout: 50000
+
+    #Permitir rastreamento
+- runFlow:
+    when:
+      visible: ${output.login.modalConfirmBR}
+    commands:
+        - tapOn: ${output.login.modalConfirmBR}
+
+- runFlow:
+    when:
+      visible: ${output.login.modalConfirmBR}
+    commands:
+        - tapOn: ${output.login.modalConfirmBR}
+
+#Caso esteja desatualizado, clicar em não atualizar o APP
+- runFlow:
+    when:
+      visible: ${output.login.softUpdateBanner}
+    commands:
+        - tapOn: ${output.login.optSoftUpdate}
+- extendedWaitUntil:
+    visible: ${output.login.btnFirstScreenLogin}
+    timeout: 60000 
+
+- tapOn: ${output.login.btnFirstScreenLogin}
+- runFlow:
+    when:
+      visible: ${output.login.optContinuar}
+    commands:
+        - tapOn: ${output.login.optContinuar}
+
+
+- extendedWaitUntil:
+    visible: ${output.login.formLogin}
+    timeout: 10000 
+- tapOn: ${output.login.fldLoginEmail}
+- inputText: ${USERNAME}
+- pressKey: Enter
+- inputText: ${PASSWORD}
+- pressKey: Enter
+#Clique para ocultar o teclado
+- tapOn:
+    point: "92%,58%"
+
+#Pular o tutorial de novidades
+- runFlow:
+    when:
+      visible: "Novidades no app!"
+    commands:
+        - tapOn: "Pular"
+#Se der falha de comunicação, tenta novamente
+- runFlow:
+    when:
+      visible: ${output.login.bannerFalhaComunicacao}
+    commands:
+        - tapOn: ${output.login.btnRetry}
+- waitForAnimationToEnd:
+    timeout: 50000    
+- runFlow: 
+    file: ./ios_banners.yaml 
+

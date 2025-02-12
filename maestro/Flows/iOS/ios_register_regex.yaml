@@ -1,0 +1,678 @@
+appId: br.com.edenred.stg
+name: Validar regex de e-mail em Cadastro 
+tags: 
+  - onboarding
+  - cadastro
+env:
+    CPF: "34775379046"
+    NAME: Teste QA
+    TEL: 119645361824
+    DATE: 140719957
+ #E-mail com subdomínio e domínio comum
+    VALID_EMAIL_1: "ticket.automacao@subdomain.domain.com"  # E-mail com subdomínio e domínio comum
+
+  #E-mail com letras, números e caracteres especiais na parte local
+    VALID_EMAIL_2: "ticket.automacao+tag@example.com"  # E-mail com caractere
+    VALID_EMAIL_3: "ticket.automacao+10@example.com"  # E-mail com número
+
+  #E-mail com nome e subdomínio
+    VALID_EMAIL_4: "ticket.automacao@domain.com"  # E-mail com nome e subdomínio
+    VALID_EMAIL_5: "ticket.automacao@sub.domain.co.uk"  # E-mail com nome e subdomínio
+
+  #E-mail com números na parte local e no domínio
+    VALID_EMAIL_6: "123user.456@sub123.example.com"  # E-mail com números na parte local e no domínio
+
+  # Cenário: E-mail domímio muio lonngo
+    VALID_EMAIL_7: "a@verylongdomainnamefortestingpurposes.com"  # E-mail domímio muio longo
+
+  # Cenário: E-mail domímio muio lonngo
+    VALID_EMAIL_8: "ticketautomacao@subdomain.verylongtld"  # E-mail subdomínio e TLD longos
+---
+- runFlow: ./subflows/ios_loader_pages.yaml
+
+#Iniciar o APP
+- launchApp:
+    clearState: true
+- waitForAnimationToEnd:
+    timeout: 5000
+
+#Permitir rastreamento
+- runFlow:
+    when:
+      visible: ${output.login.modalConfirmBR}
+    commands:
+        - tapOn: ${output.login.modalConfirmBR}
+- runFlow:
+    when:
+      visible: ${output.login.modalConfirmBR}
+    commands:
+        - tapOn: ${output.login.modalConfirmBR}
+
+#Caso esteja desatualizado, clicar em não atualizar o APP
+- runFlow:
+    when:
+      visible: ${output.login.softUpdateBanner}
+    commands:
+        - tapOn: ${output.login.optSoftUpdate}
+
+#Clicar em Crie sua conta Ticket
+- tapOn: ${output.registration.btnCreateAccount}
+
+#Validar que está na página de Cadastro
+- assertVisible: "Para fazer parte do mundo Ticket é super fácil, digite seu CPF abaixo:"
+
+#Inserir o CPF
+- tapOn: ${output.registration.viewCPF}
+# - inputText: ${CPF}
+#Inserindo CPF por partes para nao gerar erro
+- inputText: "347"
+- inputText: "753"
+- inputText: "790"
+- inputText: "46"
+
+#Fechar o teclado e aceitar os termos
+- tapOn: "Para fazer parte do mundo Ticket é super fácil, digite seu CPF abaixo:"
+- tapOn:
+    point: ${output.registration.view_TnC_Accept}
+- tapOn:
+    point: ${output.registration.view_DPU_Accept}
+- tapOn:
+    point: ${output.registration.view_Email_Accept}
+- tapOn:
+    point: ${output.registration.view_SMS_Push_Accept}
+
+#Clicar em Avançar
+- scrollUntilVisible:
+    element: ${output.registration.btnAdvance}
+    direction: DOWN
+- tapOn: ${output.registration.btnAdvance}
+
+#Tela de informe seus dados pessoais
+- assertVisible: "Informe seus dados pessoais"
+- tapOn: ${output.registration.view_Name}
+- inputText: ${NAME}
+- pressKey: Enter
+- tapOn: "Todos os campos são obrigatórios"
+- tapOn: ${output.registration.view_Mobile}
+- inputText: ${TEL}
+- scrollUntilVisible:
+    element: ${output.registration.view_DOF}
+    direction: DOWN 
+- tapOn: ${output.registration.view_DOF}
+- inputText: ${DATE}
+- pressKey: Enter
+
+# Cenário: E-mail com subdomínio e domínio comum
+#Clicar no e-mail, inserir os dados válidos e avançar
+- tapOn: ${output.registration.view_Email}
+- inputText: ${VALID_EMAIL_1}
+- pressKey: Enter
+- tapOn: ${output.registration.view_Email}
+- tapOn: ${output.registration.view_Email_Confirm}
+- inputText: ${VALID_EMAIL_1}
+- pressKey: Enter
+- tapOn: ${output.registration.btnAdvance}
+
+#Validar que foi enviado um e-mail
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertVisible: "Digite abaixo o código que enviamos para seu e-mail ${VALID_EMAIL_1}"
+
+#Voltar para a tela anterior
+- tapOn:
+   point: ${output.header.btnBack_register}
+   
+#Voltar para a tela anterior
+- tapOn:
+   point: ${output.header.btnBack_register}   
+
+#Clicar para sair do cadastro
+- tapOn: ${output.registration.hplk_Reg_Exit}
+- waitForAnimationToEnd:
+    timeout: 5000
+
+#Iniciar o fluxo novamente
+# Cenário: #E-mail com caracteres especiais na parte local
+#Clicar em Crie sua conta Ticket
+- assertVisible: ${output.registration.btnCreateAccount}
+- tapOn: ${output.registration.btnCreateAccount}
+
+#Validar que está na página de Cadastro
+- assertVisible: "Para fazer parte do mundo Ticket é super fácil, digite seu CPF abaixo:"
+
+#Inserir o CPF
+- tapOn: ${output.registration.viewCPF}
+# - inputText: ${CPF}
+#Inserindo CPF por partes para nao gerar erro
+- inputText: "347"
+- inputText: "753"
+- inputText: "790"
+- inputText: "46"
+
+#Fechar o teclado e aceitar os termos
+- tapOn: "Para fazer parte do mundo Ticket é super fácil, digite seu CPF abaixo:"
+- tapOn:
+    point: ${output.registration.view_TnC_Accept}
+- tapOn:
+    point: ${output.registration.view_DPU_Accept}
+- tapOn:
+    point: ${output.registration.view_Email_Accept}
+- tapOn:
+    point: ${output.registration.view_SMS_Push_Accept}
+
+#Clicar em Avançar
+- scrollUntilVisible:
+    element: ${output.registration.btnAdvance}
+    direction: DOWN
+- tapOn: ${output.registration.btnAdvance}
+
+#Tela de informe seus dados pessoais
+- assertVisible: "Informe seus dados pessoais"
+- tapOn: ${output.registration.view_Name}
+- inputText: ${NAME}
+- pressKey: Enter
+- tapOn: "Todos os campos são obrigatórios"
+- tapOn: ${output.registration.view_Mobile}
+- inputText: ${TEL}
+- scrollUntilVisible:
+    element: ${output.registration.view_DOF}
+    direction: DOWN 
+- tapOn: ${output.registration.view_DOF}
+- inputText: ${DATE}
+- pressKey: Enter
+
+#Clicar no e-mail, inserir os dados válidos e avançar
+- tapOn: ${output.registration.view_Email}
+- inputText: ${VALID_EMAIL_2}
+- pressKey: Enter
+- tapOn: ${output.registration.view_Email}
+- tapOn: ${output.registration.view_Email_Confirm}
+- inputText: ${VALID_EMAIL_2}
+- pressKey: Enter
+- tapOn: ${output.registration.btnAdvance}
+
+#Validar que foi enviado um e-mail
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertVisible: "Digite abaixo o código que enviamos para seu e-mail ${VALID_EMAIL_2}"
+
+#Voltar para a tela anterior
+- tapOn:
+   point: ${output.header.btnBack_register}   
+
+#Voltar para a tela anterior
+- tapOn:
+   point: ${output.header.btnBack_register}   
+
+#Clicar para sair do cadastro
+- tapOn: ${output.registration.hplk_Reg_Exit}
+- waitForAnimationToEnd:
+    timeout: 5000
+
+
+
+#Iniciar o fluxo novamente
+# Cenário: #E-mail com número  na parte local
+#Clicar em Crie sua conta Ticket
+- assertVisible: ${output.registration.btnCreateAccount}
+- tapOn: ${output.registration.btnCreateAccount}
+
+#Validar que está na página de Cadastro
+- assertVisible: "Para fazer parte do mundo Ticket é super fácil, digite seu CPF abaixo:"
+
+#Inserir o CPF
+- tapOn: ${output.registration.viewCPF}
+# - inputText: ${CPF}
+#Inserindo CPF por partes para nao gerar erro
+- inputText: "347"
+- inputText: "753"
+- inputText: "790"
+- inputText: "46"
+
+#Fechar o teclado e aceitar os termos
+- tapOn: "Para fazer parte do mundo Ticket é super fácil, digite seu CPF abaixo:"
+- tapOn:
+    point: ${output.registration.view_TnC_Accept}
+- tapOn:
+    point: ${output.registration.view_DPU_Accept}
+- tapOn:
+    point: ${output.registration.view_Email_Accept}
+- tapOn:
+    point: ${output.registration.view_SMS_Push_Accept}
+
+#Clicar em Avançar
+- scrollUntilVisible:
+    element: ${output.registration.btnAdvance}
+    direction: DOWN
+- tapOn: ${output.registration.btnAdvance}
+
+#Tela de informe seus dados pessoais
+- assertVisible: "Informe seus dados pessoais"
+- tapOn: ${output.registration.view_Name}
+- inputText: ${NAME}
+- pressKey: Enter
+- tapOn: "Todos os campos são obrigatórios"
+- tapOn: ${output.registration.view_Mobile}
+- inputText: ${TEL}
+- scrollUntilVisible:
+    element: ${output.registration.view_DOF}
+    direction: DOWN 
+- tapOn: ${output.registration.view_DOF}
+- inputText: ${DATE}
+- pressKey: Enter
+
+#Clicar no e-mail, inserir os dados válidos e avançar
+- tapOn: ${output.registration.view_Email}
+- inputText: ${VALID_EMAIL_3}
+- pressKey: Enter
+- tapOn: ${output.registration.view_Email}
+- tapOn: ${output.registration.view_Email_Confirm}
+- inputText: ${VALID_EMAIL_3}
+- pressKey: Enter
+- tapOn: ${output.registration.btnAdvance}
+
+#Validar que foi enviado um e-mail
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertVisible: "Digite abaixo o código que enviamos para seu e-mail ${VALID_EMAIL_3}"
+
+#Voltar para a tela anterior
+- tapOn:
+   point: ${output.header.btnBack_register}  
+
+#Voltar para a tela anterior
+- tapOn:
+   point: ${output.header.btnBack_register}    
+
+#Clicar para sair do cadastro
+- tapOn: ${output.registration.hplk_Reg_Exit}
+- waitForAnimationToEnd:
+    timeout: 5000
+
+
+
+#Iniciar o fluxo novamente
+# Cenário: #E-mail com nome e subdomínio
+#Clicar em Crie sua conta Ticket
+- assertVisible: ${output.registration.btnCreateAccount}
+- tapOn: ${output.registration.btnCreateAccount}
+
+#Validar que está na página de Cadastro
+- assertVisible: "Para fazer parte do mundo Ticket é super fácil, digite seu CPF abaixo:"
+
+#Inserir o CPF
+- tapOn: ${output.registration.viewCPF}
+# - inputText: ${CPF}
+#Inserindo CPF por partes para nao gerar erro
+- inputText: "347"
+- inputText: "753"
+- inputText: "790"
+- inputText: "46"
+
+#Fechar o teclado e aceitar os termos
+- tapOn: "Para fazer parte do mundo Ticket é super fácil, digite seu CPF abaixo:"
+- tapOn:
+    point: ${output.registration.view_TnC_Accept}
+- tapOn:
+    point: ${output.registration.view_DPU_Accept}
+- tapOn:
+    point: ${output.registration.view_Email_Accept}
+- tapOn:
+    point: ${output.registration.view_SMS_Push_Accept}
+
+#Clicar em Avançar
+- scrollUntilVisible:
+    element: ${output.registration.btnAdvance}
+    direction: DOWN
+- tapOn: ${output.registration.btnAdvance}
+
+#Tela de informe seus dados pessoais
+- assertVisible: "Informe seus dados pessoais"
+- tapOn: ${output.registration.view_Name}
+- inputText: ${NAME}
+- pressKey: Enter
+- tapOn: "Todos os campos são obrigatórios"
+- tapOn: ${output.registration.view_Mobile}
+- inputText: ${TEL}
+- scrollUntilVisible:
+    element: ${output.registration.view_DOF}
+    direction: DOWN 
+- tapOn: ${output.registration.view_DOF}
+- inputText: ${DATE}
+- pressKey: Enter
+
+#Clicar no e-mail, inserir os dados válidos e avançar
+- tapOn: ${output.registration.view_Email}
+- inputText: ${VALID_EMAIL_4}
+- pressKey: Enter
+- tapOn: ${output.registration.view_Email}
+- tapOn: ${output.registration.view_Email_Confirm}
+- inputText: ${VALID_EMAIL_4}
+- pressKey: Enter
+- tapOn: ${output.registration.btnAdvance}
+
+#Validar que foi enviado um e-mail
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertVisible: "Digite abaixo o código que enviamos para seu e-mail ${VALID_EMAIL_4}"
+
+#Voltar para a tela anterior
+- tapOn:
+   point: ${output.header.btnBack_register}  
+
+#Voltar para a tela anterior
+- tapOn:
+   point: ${output.header.btnBack_register}    
+
+#Clicar para sair do cadastro
+- tapOn: ${output.registration.hplk_Reg_Exit}
+- waitForAnimationToEnd:
+    timeout: 5000
+
+
+
+#Iniciar o fluxo novamente
+# Cenário: #E-mail com nome e subdomínio
+#Clicar em Crie sua conta Ticket
+- assertVisible: ${output.registration.btnCreateAccount}
+- tapOn: ${output.registration.btnCreateAccount}
+
+#Validar que está na página de Cadastro
+- assertVisible: "Para fazer parte do mundo Ticket é super fácil, digite seu CPF abaixo:"
+
+#Inserir o CPF
+- tapOn: ${output.registration.viewCPF}
+# - inputText: ${CPF}
+#Inserindo CPF por partes para nao gerar erro
+- inputText: "347"
+- inputText: "753"
+- inputText: "790"
+- inputText: "46"
+
+#Fechar o teclado e aceitar os termos
+- tapOn: "Para fazer parte do mundo Ticket é super fácil, digite seu CPF abaixo:"
+- tapOn:
+    point: ${output.registration.view_TnC_Accept}
+- tapOn:
+    point: ${output.registration.view_DPU_Accept}
+- tapOn:
+    point: ${output.registration.view_Email_Accept}
+- tapOn:
+    point: ${output.registration.view_SMS_Push_Accept}
+
+#Clicar em Avançar
+- scrollUntilVisible:
+    element: ${output.registration.btnAdvance}
+    direction: DOWN
+- tapOn: ${output.registration.btnAdvance}
+
+#Tela de informe seus dados pessoais
+- assertVisible: "Informe seus dados pessoais"
+- tapOn: ${output.registration.view_Name}
+- inputText: ${NAME}
+- pressKey: Enter
+- tapOn: "Todos os campos são obrigatórios"
+- tapOn: ${output.registration.view_Mobile}
+- inputText: ${TEL}
+- scrollUntilVisible:
+    element: ${output.registration.view_DOF}
+    direction: DOWN 
+- tapOn: ${output.registration.view_DOF}
+- inputText: ${DATE}
+- pressKey: Enter
+
+#Clicar no e-mail, inserir os dados válidos e avançar
+- tapOn: ${output.registration.view_Email}
+- inputText: ${VALID_EMAIL_5}
+- pressKey: Enter
+- tapOn: ${output.registration.view_Email}
+- tapOn: ${output.registration.view_Email_Confirm}
+- inputText: ${VALID_EMAIL_5}
+- pressKey: Enter
+- tapOn: ${output.registration.btnAdvance}
+
+#Validar que foi enviado um e-mail
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertVisible: "Digite abaixo o código que enviamos para seu e-mail ${VALID_EMAIL_5}"
+
+#Voltar para a tela anterior
+- tapOn:
+   point: ${output.header.btnBack_register}  
+
+#Voltar para a tela anterior
+- tapOn:
+   point: ${output.header.btnBack_register}    
+
+#Clicar para sair do cadastro
+- tapOn: ${output.registration.hplk_Reg_Exit}
+- waitForAnimationToEnd:
+    timeout: 5000
+
+
+
+#Iniciar o fluxo novamente
+# Cenário: # E-mail com números na parte local e no domínio
+#Clicar em Crie sua conta Ticket
+- assertVisible: ${output.registration.btnCreateAccount}
+- tapOn: ${output.registration.btnCreateAccount}
+
+#Validar que está na página de Cadastro
+- assertVisible: "Para fazer parte do mundo Ticket é super fácil, digite seu CPF abaixo:"
+
+#Inserir o CPF
+- tapOn: ${output.registration.viewCPF}
+# - inputText: ${CPF}
+#Inserindo CPF por partes para nao gerar erro
+- inputText: "347"
+- inputText: "753"
+- inputText: "790"
+- inputText: "46"
+
+#Fechar o teclado e aceitar os termos
+- tapOn: "Para fazer parte do mundo Ticket é super fácil, digite seu CPF abaixo:"
+- tapOn:
+    point: ${output.registration.view_TnC_Accept}
+- tapOn:
+    point: ${output.registration.view_DPU_Accept}
+- tapOn:
+    point: ${output.registration.view_Email_Accept}
+- tapOn:
+    point: ${output.registration.view_SMS_Push_Accept}
+
+#Clicar em Avançar
+- scrollUntilVisible:
+    element: ${output.registration.btnAdvance}
+    direction: DOWN
+- tapOn: ${output.registration.btnAdvance}
+
+#Tela de informe seus dados pessoais
+- assertVisible: "Informe seus dados pessoais"
+- tapOn: ${output.registration.view_Name}
+- inputText: ${NAME}
+- pressKey: Enter
+- tapOn: "Todos os campos são obrigatórios"
+- tapOn: ${output.registration.view_Mobile}
+- inputText: ${TEL}
+- scrollUntilVisible:
+    element: ${output.registration.view_DOF}
+    direction: DOWN 
+- tapOn: ${output.registration.view_DOF}
+- inputText: ${DATE}
+- pressKey: Enter
+
+#Clicar no e-mail, inserir os dados válidos e avançar
+- tapOn: ${output.registration.view_Email}
+- inputText: ${VALID_EMAIL_6}
+- pressKey: Enter
+- tapOn: ${output.registration.view_Email}
+- tapOn: ${output.registration.view_Email_Confirm}
+- inputText: ${VALID_EMAIL_6}
+- pressKey: Enter
+- tapOn: ${output.registration.btnAdvance}
+
+#Validar que foi enviado um e-mail
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertVisible: "Digite abaixo o código que enviamos para seu e-mail ${VALID_EMAIL_6}"
+
+#Voltar para a tela anterior
+- tapOn:
+   point: ${output.header.btnBack_register}  
+
+#Voltar para a tela anterior
+- tapOn:
+   point: ${output.header.btnBack_register}    
+
+#Clicar para sair do cadastro
+- tapOn: ${output.registration.hplk_Reg_Exit}
+- waitForAnimationToEnd:
+    timeout: 5000
+
+
+
+#Iniciar o fluxo novamente
+# Cenário:  # E-mail domímio muio longo
+#Clicar em Crie sua conta Ticket
+- assertVisible: ${output.registration.btnCreateAccount}
+- tapOn: ${output.registration.btnCreateAccount}
+
+#Validar que está na página de Cadastro
+- assertVisible: "Para fazer parte do mundo Ticket é super fácil, digite seu CPF abaixo:"
+
+#Inserir o CPF
+- tapOn: ${output.registration.viewCPF}
+# - inputText: ${CPF}
+#Inserindo CPF por partes para nao gerar erro
+- inputText: "347"
+- inputText: "753"
+- inputText: "790"
+- inputText: "46"
+
+#Fechar o teclado e aceitar os termos
+- tapOn: "Para fazer parte do mundo Ticket é super fácil, digite seu CPF abaixo:"
+- tapOn:
+    point: ${output.registration.view_TnC_Accept}
+- tapOn:
+    point: ${output.registration.view_DPU_Accept}
+- tapOn:
+    point: ${output.registration.view_Email_Accept}
+- tapOn:
+    point: ${output.registration.view_SMS_Push_Accept}
+
+#Clicar em Avançar
+- scrollUntilVisible:
+    element: ${output.registration.btnAdvance}
+    direction: DOWN
+- tapOn: ${output.registration.btnAdvance}
+
+#Tela de informe seus dados pessoais
+- assertVisible: "Informe seus dados pessoais"
+- tapOn: ${output.registration.view_Name}
+- inputText: ${NAME}
+- pressKey: Enter
+- tapOn: "Todos os campos são obrigatórios"
+- tapOn: ${output.registration.view_Mobile}
+- inputText: ${TEL}
+- scrollUntilVisible:
+    element: ${output.registration.view_DOF}
+    direction: DOWN 
+- tapOn: ${output.registration.view_DOF}
+- inputText: ${DATE}
+- pressKey: Enter
+
+#Clicar no e-mail, inserir os dados válidos e avançar
+- tapOn: ${output.registration.view_Email}
+- inputText: ${VALID_EMAIL_7}
+- pressKey: Enter
+- tapOn: ${output.registration.view_Email}
+- tapOn: ${output.registration.view_Email_Confirm}
+- inputText: ${VALID_EMAIL_7}
+- pressKey: Enter
+- tapOn: ${output.registration.btnAdvance}
+
+#Validar que foi enviado um e-mail
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertVisible: "Digite abaixo o código que enviamos para seu e-mail ${VALID_EMAIL_7}"
+
+#Voltar para a tela anterior
+- tapOn:
+   point: ${output.header.btnBack_register}  
+
+#Voltar para a tela anterior
+- tapOn:
+   point: ${output.header.btnBack_register}    
+
+#Clicar para sair do cadastro
+- tapOn: ${output.registration.hplk_Reg_Exit}
+- waitForAnimationToEnd:
+    timeout: 5000
+
+
+
+#Iniciar o fluxo novamente
+# Cenário:  # E-mail domímio muio longo
+#Clicar em Crie sua conta Ticket
+- assertVisible: ${output.registration.btnCreateAccount}
+- tapOn: ${output.registration.btnCreateAccount}
+
+#Validar que está na página de Cadastro
+- assertVisible: "Para fazer parte do mundo Ticket é super fácil, digite seu CPF abaixo:"
+
+#Inserir o CPF
+- tapOn: ${output.registration.viewCPF}
+# - inputText: ${CPF}
+#Inserindo CPF por partes para nao gerar erro
+- inputText: "347"
+- inputText: "753"
+- inputText: "790"
+- inputText: "46"
+
+#Fechar o teclado e aceitar os termos
+- tapOn: "Para fazer parte do mundo Ticket é super fácil, digite seu CPF abaixo:"
+- tapOn:
+    point: ${output.registration.view_TnC_Accept}
+- tapOn:
+    point: ${output.registration.view_DPU_Accept}
+- tapOn:
+    point: ${output.registration.view_Email_Accept}
+- tapOn:
+    point: ${output.registration.view_SMS_Push_Accept}
+
+#Clicar em Avançar
+- scrollUntilVisible:
+    element: ${output.registration.btnAdvance}
+    direction: DOWN
+- tapOn: ${output.registration.btnAdvance}
+
+#Tela de informe seus dados pessoais
+- assertVisible: "Informe seus dados pessoais"
+- tapOn: ${output.registration.view_Name}
+- inputText: ${NAME}
+- pressKey: Enter
+- tapOn: "Todos os campos são obrigatórios"
+- tapOn: ${output.registration.view_Mobile}
+- inputText: ${TEL}
+- scrollUntilVisible:
+    element: ${output.registration.view_DOF}
+    direction: DOWN 
+- tapOn: ${output.registration.view_DOF}
+- inputText: ${DATE}
+- pressKey: Enter
+
+#Clicar no e-mail, inserir os dados válidos e avançar
+- tapOn: ${output.registration.view_Email}
+- inputText: ${VALID_EMAIL_8}
+- pressKey: Enter
+- tapOn: ${output.registration.view_Email}
+- tapOn: ${output.registration.view_Email_Confirm}
+- inputText: ${VALID_EMAIL_8}
+- pressKey: Enter
+- tapOn: ${output.registration.btnAdvance}
+
+#Validar que foi enviado um e-mail
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertVisible: "Digite abaixo o código que enviamos para seu e-mail ${VALID_EMAIL_8}"
+

@@ -1,0 +1,54 @@
+appId: br.com.mobile
+name: Validar tela de MFA com preenchimento do formulario de cadastro com CPF existente
+tags: 
+  - onboarding
+  - cadastro
+  - acesso_deslogado
+env:
+    EMAIL: smokelevva+7@gmail.com
+    CPF: 25046830736
+    NAME: John Senna
+    TEL: 5511992066269
+    DATE: 120419994
+---
+#Realizar cadastro
+- launchApp:
+    clearState: true
+- waitForAnimationToEnd:
+    timeout: 5000
+- tapOn: "Crie sua conta Ticket"
+- assertVisible: "Que bom ver você\npor aqui!"
+- tapOn: "CPF"
+- inputText: ${CPF}
+- hideKeyboard
+- tapOn:
+    point: "7%,71%"
+- tapOn:
+    point: "7%,76%"
+- tapOn:
+    point: "7%,81%"
+- tapOn:
+    point: "7%,85%"
+- tapOn: "Avançar"
+- assertVisible: "Informe seus dados pessoais"
+- tapOn: "Nome completo"
+- inputText: ${NAME}
+- hideKeyboard
+- tapOn: "Celular"
+- inputText: ${TEL}
+- tapOn: "Data de nascimento"
+- inputText: ${DATE}
+- hideKeyboard
+- tapOn: "E-mail"
+- inputText: ${EMAIL}
+- hideKeyboard
+- tapOn: "Confirmar e-mail"
+- inputText: ${EMAIL}
+- hideKeyboard
+- scrollUntilVisible:
+    element: "Avançar"
+    direction: DOWN 
+- tapOn: "Avançar"
+- waitForAnimationToEnd:
+    timeout: 15000
+- assertVisible: "Digite abaixo o código que enviamos para seu e-mail smokelevva+7@gmail.com"

@@ -1,0 +1,67 @@
+appId: br.com.edenred.stg
+name: Validar adicionar cartão e excluir - Home com cartão
+tags: 
+  - core
+  - cartao
+  - add_cartao
+
+env:
+    USERNAME: automacao@gmail.com
+    PASSWORD: Teste@123 
+
+onFlowStart:
+  - runFlow: ./subflows/ios_login_default.yaml
+---
+- runFlow: ./subflows/ios_loader_pages.yaml
+#Validar cadastrar cartao (Restaurante)
+
+- scrollUntilVisible:
+    element: ${output.home.btnAddCard}
+    direction: "DOWN"
+- tapOn: ${output.home.btnAddCard}  
+- assertVisible: "Número do cartão"
+- tapOn: "Número do cartão"
+- inputText: "3085"
+- inputText: "1300"
+- inputText: "0328"
+- inputText: "4731"
+- scrollUntilVisible:
+    element: "Avançar"
+    direction: DOWN 
+- tapOn: "Avançar"
+- assertVisible: "Boa notícia, encontramos as informações do seu cartão no nosso sistema. Agora, confirme a senha que recebeu junto com o cartão"
+- tapOn: "Senha"
+- inputText: "2111"
+- hideKeyboard
+- scrollUntilVisible:
+    element: "Confirmar senha"
+    direction: DOWN 
+- tapOn: "Confirmar senha"
+- inputText: "2111"
+- tapOn: "Boa notícia, encontramos as informações do seu cartão no nosso sistema. Agora, confirme a senha que recebeu junto com o cartão"
+- tapOn:
+    point: "50%,93%"
+- waitForAnimationToEnd:
+    timeout: 11000
+- assertVisible: "Cartão cadastrado com\ \nsucesso!"
+- tapOn: "Ir para home"
+- assertVisible: ${output.home.btnAddCard}
+#Remover cartão Add
+- waitForAnimationToEnd:
+    timeout: 5000
+- tapOn: ${output.home.btnMoreServices}
+- assertVisible: "Qual serviço deseja acessar?"
+- tapOn: ${output.cardServices.Delete}
+- assertVisible: "O que acontece se eu excluir meu cartão?"
+- tapOn:
+    point: "50%,93%"
+- assertVisible: "Você também perderá os dados do seu cartão salvo no Portal Ticket e plataformas de delivery. Seu cartão físico continua funcionando normalmente"
+- tapOn:
+    point: "50%,85%"
+- assertVisible: "Cartão excluído!"
+- tapOn: "Entendi"
+- waitForAnimationToEnd:
+    timeout: 2000
+- takeScreenshot: Home com o cartao excluido (iOS)
+- assertVisible: ${output.home.btnAddCard}
+

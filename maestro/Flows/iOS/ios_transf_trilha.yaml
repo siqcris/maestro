@@ -1,0 +1,188 @@
+appId: br.com.ticket.stg
+name: Validar transferencia de trilha
+tags: 
+  - payments
+  - transf_trilha
+env: 
+    USERNAME: automacao.payments@gmail.com
+    PASSWORD: Teste@123
+    CARD_TSF_PASSWORD: "5276"
+
+onFlowStart:
+  - runFlow: ./subflows/ios_login_default.yaml
+
+---
+- runFlow: ./subflows/ios_loader_pages.yaml
+
+#Tempo da animação acabar
+- waitForAnimationToEnd:
+    timeout: 10000
+- waitForAnimationToEnd:
+    timeout: 10000   
+
+#Clicar em mais serviços
+- tapOn: ${output.cardServices.moreServices}
+
+#Clicar no cartão
+- tapOn:
+    point: ${output.payments.optBillFirstCard}
+
+#Clicar em transferir saldo
+- scrollUntilVisible:
+    element: "Transferir saldo entre benefícios" 
+    direction: DOWN
+- tapOn: "Transferir saldo entre benefícios"  
+
+#Valids bottom sheet
+- assertVisible: "Aviso"
+- assertVisible: "Só é permitido a transferência entre as trilhas restaurante e alimentação"
+- tapOn: "Ok"
+
+#Validar tela de transf de saldo
+- assertVisible: "Transferir saldo entre benefício"
+- assertVisible: "Total disponível para transferir"
+- assertVisible: "Use o marcador para editar os valores de cada benefício ou digite nos campos disponíveis"
+
+#Centralizando o botão
+- tapOn:
+    point: ${output.payments.optSwipeCenter}
+
+#Arrastando tudo para a esquerda, tirando todo o saldo da trilha TR
+- swipe:  
+    start: 50%, 60%
+    end: 5%, 60% 
+
+- assertVisible: "0,00"
+
+#Arrastando tudo para a direita, tirando todo o saldo da trilha TA
+- swipe:  
+    start: 10%, 60%
+    end: 95%, 60% 
+
+- assertVisible: "0,00"
+
+
+#Arrastando para posicao inicial para validar que desabilita o botao 'Continuar'
+- swipe:  
+    start: 90%, 60%
+    end: 50%, 60% 
+
+#Arrastando para distribuir o saldo
+- swipe:  
+    start: 50%, 60%
+    end: 30%, 50%    
+
+#Continuacao do Fluxo
+- tapOn: "Continuar"
+
+#Tela de preenchimento de senha
+- assertVisible: "Informe a senha do seu cartão"
+- tapOn:
+    point: ${output.payments.optCardPassword}
+- inputText: ${CARD_TSF_PASSWORD}
+
+
+- tapOn: "Confirmar"
+- waitForAnimationToEnd:
+    timeout: 90000
+
+#Separacao de caso de sucesso e erro
+#Erro
+- runFlow:
+    when:
+      visible: "Não foi possível realizar sua transferência"
+    commands:      
+        - assertVisible: "Por favor, tente novamente mais tarde, e revise seus dados"  
+        - tapOn: "Tentar novamente"
+        - waitForAnimationToEnd:
+            timeout: 15000
+        - tapOn: "Continuar"
+        - assertVisible: "Informe a senha do seu cartão"
+        - tapOn:
+            point: ${output.payments.optCardPassword}
+        - inputText: ${CARD_TSF_PASSWORD} 
+        - tapOn: "Confirmar"   
+        - waitForAnimationToEnd:
+            timeout: 90000
+
+
+  
+#Sucesso
+- runFlow:
+    when:
+      visible: "Transferência solicitada"
+    commands:      
+        - assertVisible: "Transferência solicitada"
+        - assertVisible: "Veja abaixo, como vai ficar o saldo de cada benefício. Acompanhe a movimentação no seu extrato"
+
+#Validar redirecionamento 'Voltar para home'
+- tapOn: "Voltar para home"
+- waitForAnimationToEnd:
+    timeout: 25000
+
+
+#Refazer o fluxo para deixar o saldo ok para a próxima vez que rodar
+#Clicar em mais serviços
+- tapOn: ${output.cardServices.moreServices}
+
+#Clicar no cartão
+- tapOn:
+    point: ${output.payments.optBillFirstCard}
+
+#Clicar em transferir saldo
+- scrollUntilVisible:
+    element: "Transferir saldo entre benefícios" 
+    direction: DOWN
+- tapOn: "Transferir saldo entre benefícios"  
+
+#Clicar em Ok
+- tapOn: "Ok"
+
+#Centralizando o botão
+- tapOn:
+    point: ${output.payments.optSwipeCenter}
+
+
+#Continuacao do Fluxo
+- tapOn: "Continuar"
+
+#Tela de preenchimento de senha
+- assertVisible: "Informe a senha do seu cartão"
+- tapOn:
+    point: ${output.payments.optCardPassword}
+- inputText: ${CARD_TSF_PASSWORD}
+
+
+- tapOn: "Confirmar"
+- waitForAnimationToEnd:
+    timeout: 90000
+
+#Separacao de caso de sucesso e erro
+#Erro
+- runFlow:
+    when:
+      visible: "Não foi possível realizar sua transferência"
+    commands:      
+        - assertVisible: "Por favor, tente novamente mais tarde, e revise seus dados"  
+        - tapOn: "Tentar novamente"
+        - waitForAnimationToEnd:
+            timeout: 15000
+        - tapOn: "Continuar"
+        - assertVisible: "Informe a senha do seu cartão"
+        - tapOn:
+            point: ${output.payments.optCardPassword}
+        - inputText: ${CARD_TSF_PASSWORD}  
+        - tapOn: "Confirmar"   
+        - waitForAnimationToEnd:
+            timeout: 90000
+
+
+  
+#Sucesso
+- runFlow:
+    when:
+      visible: "Transferência solicitada"
+    commands:      
+        - assertVisible: "Transferência solicitada"
+        - assertVisible: "Veja abaixo, como vai ficar o saldo de cada benefício. Acompanhe a movimentação no seu extrato"
+
