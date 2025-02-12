@@ -80,10 +80,6 @@ Doc: Alterações na documentação do projeto
 
 ### Massas utilizadas
 
-### Cartão cadastrado exceto payments (home_com_cartao)
-
-
-### Cartões cadastrados (do mesmo produto) exceto payments (android_add_cartao_invalido)
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
 #
